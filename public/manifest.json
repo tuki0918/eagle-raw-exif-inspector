@@ -1,0 +1,19 @@
+{
+  "id": "9952a2b2-499f-4d4e-afd2-2554fe44808a",
+  "version": "0.1.0",
+  "platform": "all",
+  "arch": "all",
+  "name": "[DEMO] Vite React Inspector",
+  "logo": "logo.png",
+  "keywords": [],
+  "devTools": true,
+  "preview": {
+    "jpg,png": {
+      "inspector": {
+        "path": "index.html",
+        "height": 100,
+        "multiSelect": false
+      }
+    }
+  }
+}
