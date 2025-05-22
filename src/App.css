@@ -1,6 +1,4 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
+@import "tailwindcss";
+
+/* https://tailwindcss.com/docs/dark-mode#using-a-data-attribute */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));

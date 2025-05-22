@@ -1,4 +1,4 @@
-# [DEMO] Vite React Inspector
+# [Eagle] RAW EXIF Metadata
 
 ![](docs/sample.png)
 
@@ -10,7 +10,3 @@ $ npm run build
 ```
 
 - Import the `dist` folder as a plugin in Eagle App.
-
-## Note
-
-> [Getting Started - Your First Plugin](https://developer.eagle.cool/plugin-api/get-started/creating-your-first-plugin)
