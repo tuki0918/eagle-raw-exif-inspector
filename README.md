@@ -1,6 +1,6 @@
 # [Eagle] RAW EXIF Metadata
 
-![](docs/sample.png)
+![](docs/sample1.png)
 
 ## Usage
 
