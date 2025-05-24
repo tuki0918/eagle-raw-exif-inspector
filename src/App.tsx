@@ -8,7 +8,7 @@ type Theme = "light" | "dark";
 function App() {
   const [theme, setTheme] = useState<Theme>("light");
   const [item, setItem] = useState<{
-    [key: string]: string | number | boolean;
+    [key: string]: unknown;
   } | null>(null);
 
   useEffect(() => {

@@ -2,7 +2,7 @@ const ImageExifMetadata = ({
   item,
 }: {
   item: {
-    [key: string]: string | number | boolean;
+    [key: string]: unknown;
   };
 }) => {
   return (
@@ -13,12 +13,41 @@ const ImageExifMetadata = ({
             {key}
           </div>
           <div className="py-3 px-4 text-[var(--color-text-dark)] bg-[var(--color-bg-dark)] dark:text-[var(--color-text-lightgray)] dark:bg-[var(--color-bg-lightgray)] rounded-md">
-            {value}
+            {renderValue(value)}
           </div>
         </div>
       ))}
     </>
   );
 };
+
+function renderValue(value: unknown): string {
+  if (value == null) return String(value);
+  if (
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  ) {
+    return value.toString();
+  }
+  if (value instanceof Date) {
+    return value.toLocaleString();
+  }
+  if (Array.isArray(value)) {
+    return `[${value.map(renderValue).join(", ")}]`;
+  }
+  if (ArrayBuffer.isView(value)) {
+    // TypedArray (Uint8Array など)
+    return `[${Array.from(value as Uint8Array).join(", ")}]`;
+  }
+  if (typeof value === "object") {
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return String(value);
+    }
+  }
+  return String(value);
+}
 
 export default ImageExifMetadata;
