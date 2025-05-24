@@ -10,3 +10,7 @@ declare const eagle: {
     getSelected: () => Promise<any[]>;
   };
 };
+
+declare const i18next: {
+  t: (key: string) => string;
+};
