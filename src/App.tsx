@@ -17,14 +17,17 @@ function App() {
       setTheme(lightOrDark(theme));
 
       const items = await eagle.item.getSelected();
-
-      if (items.length === 1) {
-        const item = items[0];
-        const data = await exifr.parse(item.filePath);
-        setItem(data);
-      } else {
+      if (items.length !== 1) {
         setItem(null);
+        return;
       }
+      const item = items[0];
+      const data = await exifr.parse(item.filePath);
+      if (data == null) {
+        setItem(null);
+        return;
+      }
+      setItem(data);
     });
 
     eagle.onThemeChanged((theme) => {
