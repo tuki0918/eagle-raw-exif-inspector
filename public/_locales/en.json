@@ -3,5 +3,8 @@
     "app": {
       "name": "RAW EXIF Metadata"
     }
+  },
+  "message": {
+    "notFound": "No data found."
   }
 }
