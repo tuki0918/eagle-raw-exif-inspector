@@ -9,7 +9,7 @@ export type EagleTheme =
   | "BLUE"
   | "PURPLE";
 
-export const ThemeWrapper = ({
+const ThemeWrapper = ({
   theme,
   children,
 }: PropsWithChildren<{ theme: EagleTheme | string }>) => (
