@@ -6,13 +6,13 @@ export type Theme = "light" | "dark";
 const ThemeWrapper = ({
   theme,
   children,
-}: PropsWithChildren<{ theme: EagleTheme | string }>) => (
+}: PropsWithChildren<{ theme: EagleTheme }>) => (
   <div data-theme={lightOrDark(theme)}>{children}</div>
 );
 
 export default ThemeWrapper;
 
-function lightOrDark(theme: EagleTheme | string): Theme {
+function lightOrDark(theme: EagleTheme): Theme {
   switch (theme) {
     case "LIGHT":
     case "LIGHTGRAY":
