@@ -1,5 +1,12 @@
 import type { PropsWithChildren } from "react";
-import type { EagleTheme } from "./ThemeWrapper";
+
+export type EagleTheme =
+  | "LIGHT"
+  | "LIGHTGRAY"
+  | "GRAY"
+  | "DARK"
+  | "BLUE"
+  | "PURPLE";
 
 const eagleThemeBgColors: Record<EagleTheme, string> = {
   LIGHT: "rgb(248, 248, 249)",

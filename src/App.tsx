@@ -1,11 +1,12 @@
 import "./App.css";
 import exifr from "exifr";
 import { useEffect, useState } from "react";
+import type { EagleTheme } from "./components/EagleThemeWrapper";
 import ImageExifMetadata from "./components/ImageExifMetadata";
 import ThemeWrapper from "./components/ThemeWrapper";
 
 function App() {
-  const [theme, setTheme] = useState<string>("");
+  const [theme, setTheme] = useState<EagleTheme>("LIGHT");
   const [item, setItem] = useState<{
     [key: string]: unknown;
   } | null>(null);
@@ -13,7 +14,7 @@ function App() {
   useEffect(() => {
     eagle.onPluginCreate(async () => {
       const theme = eagle.app.theme;
-      setTheme(theme);
+      setTheme(theme as EagleTheme);
 
       const items = await eagle.item.getSelected();
       if (items.length !== 1) {
@@ -30,7 +31,7 @@ function App() {
     });
 
     eagle.onThemeChanged((theme) => {
-      setTheme(theme);
+      setTheme(theme as EagleTheme);
     });
   }, []);
 

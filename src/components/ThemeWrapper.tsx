@@ -1,13 +1,7 @@
 import type { PropsWithChildren } from "react";
+import type { EagleTheme } from "./EagleThemeWrapper";
 
 export type Theme = "light" | "dark";
-export type EagleTheme =
-  | "LIGHT"
-  | "LIGHTGRAY"
-  | "GRAY"
-  | "DARK"
-  | "BLUE"
-  | "PURPLE";
 
 const ThemeWrapper = ({
   theme,
