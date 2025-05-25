@@ -1,9 +1,9 @@
 import "./App.css";
+import type { EagleTheme } from "@/components/EagleThemeWrapper";
+import ImageExifMetadata from "@/components/ImageExifMetadata";
+import ThemeWrapper from "@/components/ThemeWrapper";
 import exifr from "exifr";
 import { useEffect, useState } from "react";
-import type { EagleTheme } from "./components/EagleThemeWrapper";
-import ImageExifMetadata from "./components/ImageExifMetadata";
-import ThemeWrapper from "./components/ThemeWrapper";
 
 function App() {
   const [theme, setTheme] = useState<EagleTheme>("LIGHT");

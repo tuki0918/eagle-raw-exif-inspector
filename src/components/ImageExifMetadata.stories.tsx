@@ -1,5 +1,5 @@
+import ImageExifMetadata from "@/components/ImageExifMetadata";
 import type { Meta, StoryObj } from "@storybook/react";
-import ImageExifMetadata from "./ImageExifMetadata";
 
 const meta: Meta<typeof ImageExifMetadata> = {
   title: "Components/ImageExifMetadata",
