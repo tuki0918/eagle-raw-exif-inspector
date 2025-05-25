@@ -1,5 +1,5 @@
+import type { EagleTheme } from "@/components/EagleThemeWrapper";
 import type { PropsWithChildren } from "react";
-import type { EagleTheme } from "./EagleThemeWrapper";
 
 export type Theme = "light" | "dark";
 
