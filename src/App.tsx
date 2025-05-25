@@ -2,11 +2,10 @@ import "./App.css";
 import exifr from "exifr";
 import { useEffect, useState } from "react";
 import ImageExifMetadata from "./components/ImageExifMetadata";
-
-type Theme = "light" | "dark";
+import ThemeWrapper from "./components/ThemeWrapper";
 
 function App() {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<string>("");
   const [item, setItem] = useState<{
     [key: string]: unknown;
   } | null>(null);
@@ -14,7 +13,7 @@ function App() {
   useEffect(() => {
     eagle.onPluginCreate(async () => {
       const theme = eagle.app.theme;
-      setTheme(lightOrDark(theme));
+      setTheme(theme);
 
       const items = await eagle.item.getSelected();
       if (items.length !== 1) {
@@ -31,12 +30,12 @@ function App() {
     });
 
     eagle.onThemeChanged((theme) => {
-      setTheme(lightOrDark(theme));
+      setTheme(theme);
     });
   }, []);
 
   return (
-    <div data-theme={theme}>
+    <ThemeWrapper theme={theme}>
       {item ? (
         <ImageExifMetadata item={item} />
       ) : (
@@ -44,23 +43,8 @@ function App() {
           {i18next.t("message.notFound")}
         </div>
       )}
-    </div>
+    </ThemeWrapper>
   );
-}
-
-function lightOrDark(theme: string): Theme {
-  switch (theme) {
-    case "LIGHT":
-    case "LIGHTGRAY":
-      return "light";
-    case "GRAY":
-    case "BLUE":
-    case "PURPLE":
-    case "DARK":
-      return "dark";
-    default:
-      return "light";
-  }
 }
 
 export default App;
