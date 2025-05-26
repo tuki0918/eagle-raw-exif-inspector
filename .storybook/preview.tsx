@@ -5,6 +5,7 @@ import EagleThemeWrapper from "../src/components/EagleThemeWrapper";
 import ThemeWrapper from "../src/components/ThemeWrapper";
 import "../src/index.css";
 import "../src/App.css";
+import "./preview.css";
 
 const preview: Preview = {
   parameters: {
