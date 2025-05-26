@@ -5,8 +5,15 @@ const ImageExifMetadata = ({
 }: {
   item: {
     [key: string]: unknown;
-  };
+  } | null;
 }) => {
+  if (item == null) {
+    return (
+      <div className="py-3 px-4 info-message rounded-md text-center">
+        {i18next.t("message.notFound")}
+      </div>
+    );
+  }
   return (
     <>
       {Object.entries(item).map(([key, value]) => (

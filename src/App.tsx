@@ -1,4 +1,4 @@
-import "./App.css";
+import "@/App.css";
 import type { EagleTheme } from "@/components/EagleThemeWrapper";
 import ImageExifMetadata from "@/components/ImageExifMetadata";
 import ThemeWrapper from "@/components/ThemeWrapper";
@@ -37,13 +37,7 @@ function App() {
 
   return (
     <ThemeWrapper theme={theme}>
-      {item ? (
-        <ImageExifMetadata item={item} />
-      ) : (
-        <div className="py-3 px-4 info-message rounded-md text-center">
-          {i18next.t("message.notFound")}
-        </div>
-      )}
+      <ImageExifMetadata item={item} />
     </ThemeWrapper>
   );
 }
