@@ -23,3 +23,21 @@ export default meta;
 type Story = StoryObj<typeof ImageExifMetadata>;
 
 export const Default: Story = {};
+
+export const Light: Story = { ...Default, globals: { theme: "LIGHT" } };
+Light.storyName = "Theme - Light";
+
+export const LightGray: Story = { ...Default, globals: { theme: "LIGHTGRAY" } };
+LightGray.storyName = "Theme - LightGray";
+
+export const Gray: Story = { ...Default, globals: { theme: "GRAY" } };
+Gray.storyName = "Theme - Gray";
+
+export const Dark: Story = { ...Default, globals: { theme: "DARK" } };
+Dark.storyName = "Theme - Dark";
+
+export const Blue: Story = { ...Default, globals: { theme: "BLUE" } };
+Blue.storyName = "Theme - Blue";
+
+export const Purple: Story = { ...Default, globals: { theme: "PURPLE" } };
+Purple.storyName = "Theme - Purple";
