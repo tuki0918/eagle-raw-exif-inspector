@@ -14,7 +14,6 @@ export function renderValue(value: unknown): string {
     return `[${value.map(renderValue).join(", ")}]`;
   }
   if (ArrayBuffer.isView(value)) {
-    // TypedArray (Uint8Array など)
     return `[${Array.from(value as Uint8Array).join(", ")}]`;
   }
   if (typeof value === "object") {
