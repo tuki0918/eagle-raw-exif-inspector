@@ -2,3 +2,15 @@
 
 /* https://tailwindcss.com/docs/dark-mode#using-a-data-attribute */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@layer components {
+  .info-message {
+    @apply text-[var(--color-text-dark-50)] bg-[var(--color-bg-dark)] dark:text-[var(--color-text-lightgray-50)] dark:bg-[var(--color-bg-lightgray)];
+  }
+  .item-label {
+    @apply text-[var(--color-text-dark)] dark:text-[var(--color-text-lightgray)];
+  }
+  .item-value {
+    @apply text-[var(--color-text-dark)] bg-[var(--color-bg-dark)] dark:text-[var(--color-text-lightgray)] dark:bg-[var(--color-bg-lightgray)];
+  }
+}

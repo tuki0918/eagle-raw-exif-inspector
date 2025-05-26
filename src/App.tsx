@@ -40,7 +40,7 @@ function App() {
       {item ? (
         <ImageExifMetadata item={item} />
       ) : (
-        <div className="py-3 px-4 text-[var(--color-text-dark-50)] bg-[var(--color-bg-dark)] dark:text-[var(--color-text-lightgray-50)] dark:bg-[var(--color-bg-lightgray)] rounded-md text-center">
+        <div className="py-3 px-4 info-message rounded-md text-center">
           {i18next.t("message.notFound")}
         </div>
       )}

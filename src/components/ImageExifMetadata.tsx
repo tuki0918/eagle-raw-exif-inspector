@@ -9,10 +9,8 @@ const ImageExifMetadata = ({
     <>
       {Object.entries(item).map(([key, value]) => (
         <div key={key} className="flex flex-col">
-          <div className="py-3 text-[var(--color-text-dark)] dark:text-[var(--color-text-lightgray)]">
-            {key}
-          </div>
-          <div className="py-3 px-4 text-[var(--color-text-dark)] bg-[var(--color-bg-dark)] dark:text-[var(--color-text-lightgray)] dark:bg-[var(--color-bg-lightgray)] rounded-md">
+          <div className="py-3 item-label">{key}</div>
+          <div className="py-3 px-4 item-value rounded-md">
             {renderValue(value)}
           </div>
         </div>
