@@ -1,4 +1,5 @@
-import type { Preview } from "@storybook/react";
+import { withThemeByDataAttribute } from "@storybook/addon-themes";
+import type { Preview, ReactRenderer } from "@storybook/react";
 import React from "react";
 import EagleThemeWrapper from "../src/components/EagleThemeWrapper";
 import ThemeWrapper from "../src/components/ThemeWrapper";
@@ -16,6 +17,19 @@ const preview: Preview = {
   },
   tags: ["autodocs"],
   decorators: [
+    withThemeByDataAttribute<ReactRenderer>({
+      themes: {
+        LIGHT: "light",
+        LIGHTGRAY: "lightgray",
+        GRAY: "gray",
+        DARK: "dark",
+        BLUE: "blue",
+        PURPLE: "purple",
+      },
+      defaultTheme: "LIGHT",
+      attributeName: "data-theme",
+    }),
+
     (Story, context) => (
       <EagleThemeWrapper theme={context.globals.theme || "LIGHT"}>
         <ThemeWrapper theme={context.globals.theme || "LIGHT"}>
@@ -24,24 +38,6 @@ const preview: Preview = {
       </EagleThemeWrapper>
     ),
   ],
-  globalTypes: {
-    theme: {
-      name: "Theme",
-      description: "Eagle Theme",
-      defaultValue: "LIGHT",
-      toolbar: {
-        icon: "paintbrush",
-        items: [
-          { value: "LIGHT", title: "Light" },
-          { value: "LIGHTGRAY", title: "LightGray" },
-          { value: "GRAY", title: "Gray" },
-          { value: "DARK", title: "Dark" },
-          { value: "BLUE", title: "Blue" },
-          { value: "PURPLE", title: "Purple" },
-        ],
-      },
-    },
-  },
 };
 
 export default preview;
