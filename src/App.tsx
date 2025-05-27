@@ -21,7 +21,7 @@ function App() {
         setItem(null);
         return;
       }
-      const item = items[0];
+      const item = items[0] as { filePath: string };
       const data = await exifr.parse(item.filePath);
       if (data == null) {
         setItem(null);
