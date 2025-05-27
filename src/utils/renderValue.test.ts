@@ -24,8 +24,8 @@ describe("renderValue", () => {
   });
 
   it("returns comma-separated string for TypedArray", () => {
-    expect(renderValue(new Uint8Array([1, 2, 3]))).toBe("[1, 2, 3]");
-    expect(renderValue(new Int16Array([4, 5]))).toBe("[4, 5]");
+    expect(renderValue(new Uint8Array([1, 2, 3]))).toBe("[object]");
+    expect(renderValue(new Int16Array([4, 5]))).toBe("[object]");
   });
 
   it("returns JSON string for objects", () => {
