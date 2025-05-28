@@ -42,9 +42,8 @@ Blue.storyName = "Theme - Blue";
 export const Purple: Story = { ...Default, globals: { theme: "PURPLE" } };
 Purple.storyName = "Theme - Purple";
 
-// // i18next is not defined
-// export const NotFound: Story = {
-//   args: {
-//     item: null,
-//   },
-// };
+export const NotFound: Story = {
+  args: {
+    item: null,
+  },
+};
