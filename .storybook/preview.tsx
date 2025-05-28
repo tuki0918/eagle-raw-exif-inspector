@@ -7,6 +7,23 @@ import "../src/index.css";
 import "../src/App.css";
 import "./preview.css";
 
+// Define global variables required for Eagle environment in Storybook
+if (typeof globalThis !== "undefined") {
+  if (typeof globalThis.eagle === "undefined") {
+    globalThis.eagle = {
+      onPluginCreate: () => {},
+      onThemeChanged: () => {},
+      app: { theme: "LIGHT" },
+      item: { getSelected: async () => [] },
+    };
+  }
+  if (typeof globalThis.i18next === "undefined") {
+    globalThis.i18next = {
+      t: (key: string) => key,
+    };
+  }
+}
+
 const preview: Preview = {
   parameters: {
     controls: {
