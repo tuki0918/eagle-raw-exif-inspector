@@ -4,7 +4,9 @@
 
 ## Installation
 
-...
+Eagle Community: [Plugin page](https://community-en.eagle.cool/plugin/1152a2b2-499f-4d4e-afd2-2554fe44808a)
+
+or, Manual Installation: [Github Releases page](https://github.com/tuki0918/eagle-raw-exif-inspector/releases)
 
 ## Usage
 
