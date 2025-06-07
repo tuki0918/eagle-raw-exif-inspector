@@ -5,6 +5,9 @@
     }
   },
   "message": {
-    "notFound": "No data found."
+    "notFound": "No data found.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyFailed": "Failed to copy."
   }
 }
