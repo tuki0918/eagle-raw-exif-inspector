@@ -5,6 +5,9 @@
     }
   },
   "message": {
-    "notFound": "データが見つかりません"
+    "notFound": "データが見つかりません",
+    "copy": "コピー",
+    "copied": "コピーしました",
+    "copyFailed": "コピーに失敗しました"
   }
 }
