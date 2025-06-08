@@ -38,11 +38,17 @@ const SelectionCopyPopup = () => {
       const rect = range.getBoundingClientRect();
       // Adjust to avoid hiding at the top of the screen
       let top = rect.top + window.scrollY - POPUP_HEIGHT - MARGIN; // use MARGIN
-      if (top < window.scrollY) {
-        // If there is not enough space above, show below
-        top = rect.bottom + window.scrollY + MARGIN;
-      }
+      // Clamp top to stay within the window
+      const minTop = window.scrollY + MARGIN;
+      const maxTop =
+        window.scrollY + window.innerHeight - POPUP_HEIGHT - MARGIN;
+      top = Math.max(minTop, Math.min(top, maxTop));
+
       let left = rect.left + window.scrollX + rect.width / 2;
+      if (top === minTop) {
+        // If there is not enough space above, show at the horizontal center of the screen
+        left = window.scrollX + window.innerWidth / 2;
+      }
       // Adjust to avoid being cut off at the left/right edge of the screen
       const halfWidth = POPUP_MIN_WIDTH / 2;
       const minLeft = window.scrollX + halfWidth + MARGIN; // use MARGIN
