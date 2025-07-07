@@ -1,5 +1,5 @@
 import type { EagleTheme } from "@/components/EagleThemeWrapper";
-import exifr from "exifr";
+import { parseMetadata } from "@/utils/exif";
 import { useEffect, useState } from "react";
 
 export function useEaglePlugin() {
@@ -18,10 +18,17 @@ export function useEaglePlugin() {
           setItem(null);
           return;
         }
+
         const item = items[0] as { filePath: string };
-        const data = await exifr.parse(item.filePath);
+        if (!item.filePath) {
+          setItem(null);
+          return;
+        }
+
+        const data = await parseMetadata(item.filePath);
         setItem(data ?? null);
-      } catch {
+      } catch (e) {
+        console.log("Failed to extract metadata:", e);
         setItem(null);
       }
     };
