@@ -30,12 +30,11 @@ export async function parseMetadata(
   filePath: string,
 ): Promise<ImageMetadata | null> {
   // Try NovelAI metadata first
-  const novelAIData = await parseNovelAIMetadata(filePath);
-  if (novelAIData) {
-    return novelAIData;
+  const data = await parseNovelAIMetadata(filePath);
+  if (data) {
+    return data;
   }
 
   // If NovelAI metadata is not found, parse EXIF data
-  const exifData = await parseExifMetadata(filePath);
-  return exifData ?? null;
+  return await parseExifMetadata(filePath);
 }

@@ -2,6 +2,7 @@ import { ungzip } from "pako";
 
 const STEALTH_PNG_MAGIC = "stealth_pngcomp";
 const RGBA_CHANNELS = 4;
+const ALPHA_CHANNEL_INDEX = 3; // Index of alpha channel in RGBA (R=0, G=1, B=2, A=3)
 
 function safeParseJson(jsonString: string): unknown {
   try {
@@ -43,8 +44,8 @@ class LSBExtractor {
       return false;
     }
 
-    const pixelIndex = (this.currentRow * this.width + this.currentCol) * 4;
-    const alphaByte = this.imageData[pixelIndex + 3];
+    const pixelIndex = (this.currentRow * this.width + this.currentCol) * RGBA_CHANNELS;
+    const alphaByte = this.imageData[pixelIndex + ALPHA_CHANNEL_INDEX];
     const bit = alphaByte & 1;
 
     this.bitCount++;
