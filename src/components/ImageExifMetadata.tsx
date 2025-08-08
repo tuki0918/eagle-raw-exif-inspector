@@ -41,23 +41,34 @@ const ImageExifMetadata = ({
 
   return (
     <>
-      {visibleEntries.map(([key, value]) => (
-        <div key={key} className="flex flex-col">
-          <div className="py-3 item-label flex items-center justify-between">
-            <span>{key}</span>
-            <FieldActionButtons
-              fieldName={key}
-              isFavorite={isFavorite(key)}
-              isHidden={isHidden(key)}
-              onToggleFavorite={toggleFavorite}
-              onToggleHidden={toggleHidden}
-            />
+      {visibleEntries.map(([key, value], index) => {
+        const isLastVisibleEntry = index === visibleEntries.length - 1;
+        const hasVisibleEntries = visibleEntries.length > 0;
+        const hasHiddenEntries = hiddenEntries.length > 0;
+        const shouldAddMarginBottom =
+          isLastVisibleEntry && hasVisibleEntries && hasHiddenEntries;
+
+        return (
+          <div
+            key={key}
+            className={`flex flex-col${shouldAddMarginBottom ? " mb-4" : ""}`}
+          >
+            <div className="py-3 item-label flex items-center justify-between">
+              <span>{key}</span>
+              <FieldActionButtons
+                fieldName={key}
+                isFavorite={isFavorite(key)}
+                isHidden={isHidden(key)}
+                onToggleFavorite={toggleFavorite}
+                onToggleHidden={toggleHidden}
+              />
+            </div>
+            <div className="py-3 px-4 item-value rounded-md">
+              {renderValue(value)}
+            </div>
           </div>
-          <div className="py-3 px-4 item-value rounded-md">
-            {renderValue(value)}
-          </div>
-        </div>
-      ))}
+        );
+      })}
 
       <HiddenFieldsSection
         hiddenEntries={hiddenEntries}

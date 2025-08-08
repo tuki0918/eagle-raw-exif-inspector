@@ -32,7 +32,7 @@ const HiddenFieldsSection = ({
   }`;
 
   return (
-    <div className="mt-4">
+    <>
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
@@ -64,7 +64,7 @@ const HiddenFieldsSection = ({
           ))}
         </div>
       )}
-    </div>
+    </>
   );
 };
 
