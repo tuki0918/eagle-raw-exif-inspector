@@ -19,6 +19,10 @@ const meta: Meta<typeof ImageExifMetadata> = {
       ColorSpace: "sRGB",
       ExifVersion: "0232",
       Software: "Camera Software v1.0",
+      Comment1: {
+        text: "This is a comment",
+      },
+      Comment2: ["This is the first comment", "This is the second comment"],
     },
   },
   render: (args) => <ImageExifMetadata item={args.item} />,

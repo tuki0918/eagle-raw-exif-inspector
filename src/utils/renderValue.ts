@@ -10,18 +10,30 @@ export function renderValue(value: unknown): string {
   if (value instanceof Date) {
     return value.toLocaleString();
   }
-  if (Array.isArray(value)) {
-    return `[${value.map(renderValue).join(", ")}]`;
-  }
   if (ArrayBuffer.isView(value)) {
     return `[${typeof value}]`;
   }
-  if (typeof value === "object") {
+  if (Array.isArray(value) || (typeof value === "object" && value !== null)) {
     try {
+      // 配列またはオブジェクトの場合、そのまま文字列として扱う
+      // （フォーマット済みの場合はすでに文字列化されている）
+      if (typeof value === "string") {
+        return value;
+      }
       return JSON.stringify(value);
     } catch {
       return String(value);
     }
   }
   return String(value);
+}
+
+// フォーマットされたJSONを検出する関数
+export function isFormattedJson(value: string): boolean {
+  // 複数行かつJSONの形式をしているかチェック
+  return (
+    value.includes("\n") &&
+    ((value.trim().startsWith("{") && value.trim().endsWith("}")) ||
+      (value.trim().startsWith("[") && value.trim().endsWith("]")))
+  );
 }

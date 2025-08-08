@@ -1,5 +1,6 @@
 import { useExifFieldPreferences } from "@/hooks/useExifFieldPreferences";
-import { renderValue } from "@/utils/renderValue";
+import { useJsonFormatter } from "@/hooks/useJsonFormatter";
+import { isFormattedJson, renderValue } from "@/utils/renderValue";
 import FieldActionButtons from "./FieldActionButtons";
 import HiddenFieldsSection from "./HiddenFieldsSection";
 
@@ -12,6 +13,8 @@ const ImageExifMetadata = ({
 }) => {
   const { preferences, toggleFavorite, toggleHidden, isFavorite, isHidden } =
     useExifFieldPreferences();
+  const { isFormatted, toggleFormat, canFormat, formatValue } =
+    useJsonFormatter();
 
   if (item == null) {
     return (
@@ -61,10 +64,25 @@ const ImageExifMetadata = ({
                 isHidden={isHidden(key)}
                 onToggleFavorite={toggleFavorite}
                 onToggleHidden={toggleHidden}
+                canFormat={canFormat(value)}
+                isFormatted={isFormatted(key)}
+                onToggleFormat={toggleFormat}
               />
             </div>
             <div className="py-3 px-4 item-value rounded-md">
-              {renderValue(value)}
+              {(() => {
+                const formattedValue = formatValue(value, key);
+                const renderedValue = renderValue(formattedValue);
+                const isFormatted = isFormattedJson(renderedValue);
+
+                return isFormatted ? (
+                  <pre className="whitespace-pre-wrap font-mono text-sm overflow-x-auto">
+                    {renderedValue}
+                  </pre>
+                ) : (
+                  renderedValue
+                );
+              })()}
             </div>
           </div>
         );
@@ -76,6 +94,10 @@ const ImageExifMetadata = ({
         isHidden={isHidden}
         onToggleFavorite={toggleFavorite}
         onToggleHidden={toggleHidden}
+        canFormat={canFormat}
+        isFormatted={isFormatted}
+        onToggleFormat={toggleFormat}
+        formatValue={formatValue}
       />
     </>
   );

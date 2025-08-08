@@ -1,4 +1,4 @@
-import { renderValue } from "@/utils/renderValue";
+import { isFormattedJson, renderValue } from "@/utils/renderValue";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import FieldActionButtons from "./FieldActionButtons";
@@ -9,6 +9,10 @@ interface HiddenFieldsSectionProps {
   isHidden: (fieldName: string) => boolean;
   onToggleFavorite: (fieldName: string) => void;
   onToggleHidden: (fieldName: string) => void;
+  canFormat?: (value: unknown) => boolean;
+  isFormatted?: (fieldName: string) => boolean;
+  onToggleFormat?: (fieldName: string) => void;
+  formatValue?: (value: unknown, fieldName: string) => unknown;
 }
 
 const HiddenFieldsSection = ({
@@ -17,6 +21,10 @@ const HiddenFieldsSection = ({
   isHidden,
   onToggleFavorite,
   onToggleHidden,
+  canFormat = () => false,
+  isFormatted = () => false,
+  onToggleFormat,
+  formatValue = (value) => value,
 }: HiddenFieldsSectionProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -55,10 +63,25 @@ const HiddenFieldsSection = ({
                   isHidden={isHidden(key)}
                   onToggleFavorite={onToggleFavorite}
                   onToggleHidden={onToggleHidden}
+                  canFormat={canFormat(value)}
+                  isFormatted={isFormatted(key)}
+                  onToggleFormat={onToggleFormat}
                 />
               </div>
               <div className="py-3 px-4 item-value rounded-md">
-                {renderValue(value)}
+                {(() => {
+                  const formattedValue = formatValue(value, key);
+                  const renderedValue = renderValue(formattedValue);
+                  const isFormatted = isFormattedJson(renderedValue);
+
+                  return isFormatted ? (
+                    <pre className="whitespace-pre-wrap font-mono text-sm overflow-x-auto">
+                      {renderedValue}
+                    </pre>
+                  ) : (
+                    renderedValue
+                  );
+                })()}
               </div>
             </div>
           ))}
