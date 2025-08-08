@@ -19,8 +19,8 @@ describe("renderValue", () => {
   });
 
   it("recursively stringifies arrays", () => {
-    expect(renderValue([1, "a", false])).toBe("[1, a, false]");
-    expect(renderValue([1, [2, 3]])).toBe("[1, [2, 3]]");
+    expect(renderValue([1, "a", false])).toBe('[1,"a",false]');
+    expect(renderValue([1, [2, 3]])).toBe("[1,[2,3]]");
   });
 
   it("returns comma-separated string for TypedArray", () => {

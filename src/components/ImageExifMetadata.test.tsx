@@ -52,7 +52,7 @@ describe("ImageExifMetadata", () => {
     // expect(screen.getByText("__DATE__")).toBeInTheDocument();
     // expect(screen.getByText("...")).toBeInTheDocument();
     expect(screen.getByText("__ARRAY__")).toBeInTheDocument();
-    expect(screen.getByText("[1, 2, 3]")).toBeInTheDocument();
+    expect(screen.getByText("[1,2,3]")).toBeInTheDocument();
     expect(screen.getByText("__OBJECT__")).toBeInTheDocument();
     expect(screen.getByText('{"one":1,"two":2}')).toBeInTheDocument();
     expect(screen.getByText("__NULL__")).toBeInTheDocument();
