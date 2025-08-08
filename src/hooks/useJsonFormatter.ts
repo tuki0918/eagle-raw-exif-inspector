@@ -24,28 +24,58 @@ export const useJsonFormatter = () => {
   const canFormat = (value: unknown): boolean => {
     // オブジェクトまたは配列のみをフォーマット対象とする
     // 数値、文字列、ブール値、null、undefinedは除外
-    return (
+    if (
       typeof value === "object" &&
       value !== null &&
       (Array.isArray(value) ||
         (typeof value === "object" && value.constructor === Object))
-    );
+    ) {
+      return true;
+    }
+
+    // 文字列の場合、JSONとして解析可能かチェック
+    if (typeof value === "string") {
+      try {
+        const parsed = JSON.parse(value);
+        return (
+          typeof parsed === "object" &&
+          parsed !== null &&
+          (Array.isArray(parsed) ||
+            (typeof parsed === "object" && parsed.constructor === Object))
+        );
+      } catch {
+        return false;
+      }
+    }
+
+    return false;
   };
 
   const formatValue = (value: unknown, fieldName: string): unknown => {
-    // フォーマット可能な値（配列・オブジェクト）の場合
+    // フォーマット可能な値（配列・オブジェクト・JSON文字列）の場合
     if (canFormat(value)) {
+      let targetValue: unknown = value;
+
+      // 文字列の場合はJSONとして解析
+      if (typeof value === "string") {
+        try {
+          targetValue = JSON.parse(value);
+        } catch {
+          return value;
+        }
+      }
+
       if (isFormatted(fieldName)) {
         // フォーマット適用: インデント付きでフォーマット
         try {
-          return JSON.stringify(value, null, 2);
+          return JSON.stringify(targetValue, null, 2);
         } catch {
           return value;
         }
       } else {
         // フォーマット未適用: 1行で表示
         try {
-          return JSON.stringify(value);
+          return JSON.stringify(targetValue);
         } catch {
           return value;
         }
