@@ -1,9 +1,27 @@
 import ImageExifMetadata from "@/components/ImageExifMetadata";
 import { render, screen } from "@testing-library/react";
 
+// Mock localStorage
+const localStorageMock = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+};
+
+Object.defineProperty(window, "localStorage", {
+  value: localStorageMock,
+  writable: true,
+});
+
 describe("ImageExifMetadata", () => {
   beforeAll(() => {
     vi.stubGlobal("i18next", { t: (key: string) => key });
+  });
+
+  beforeEach(() => {
+    localStorageMock.getItem.mockReturnValue(null);
+    localStorageMock.setItem.mockClear();
   });
 
   afterAll(() => {

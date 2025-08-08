@@ -22,6 +22,20 @@ if (typeof globalThis !== "undefined") {
       t: (key: string) => key,
     };
   }
+
+  // Mock localStorage for Storybook
+  if (typeof globalThis.localStorage === "undefined") {
+    const localStorageMock = {
+      getItem: () => null,
+      setItem: () => {},
+      removeItem: () => {},
+      clear: () => {},
+    };
+    Object.defineProperty(globalThis, "localStorage", {
+      value: localStorageMock,
+      writable: true,
+    });
+  }
 }
 
 const preview: Preview = {

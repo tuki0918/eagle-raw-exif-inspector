@@ -44,7 +44,8 @@ class LSBExtractor {
       return false;
     }
 
-    const pixelIndex = (this.currentRow * this.width + this.currentCol) * RGBA_CHANNELS;
+    const pixelIndex =
+      (this.currentRow * this.width + this.currentCol) * RGBA_CHANNELS;
     const alphaByte = this.imageData[pixelIndex + ALPHA_CHANNEL_INDEX];
     const bit = alphaByte & 1;
 

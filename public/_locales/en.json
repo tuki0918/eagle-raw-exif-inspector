@@ -8,6 +8,12 @@
     "notFound": "No data found.",
     "copy": "Copy",
     "copied": "Copied",
-    "copyFailed": "Failed to copy."
+    "copyFailed": "Failed to copy.",
+    "addFavorite": "Add to favorites",
+    "removeFavorite": "Remove from favorites",
+    "hideField": "Hide field",
+    "showField": "Show field",
+    "hiddenFieldSingle": "hidden field",
+    "hiddenFieldPlural": "hidden fields"
   }
 }
