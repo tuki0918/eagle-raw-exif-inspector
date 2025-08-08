@@ -1,6 +1,16 @@
 # [Eagle] RAW EXIF Metadata
 
+![Version 2.0.0](https://img.shields.io/badge/version-2.0.0-blue.svg)
+
 ![](docs/sample1.png)
+
+## Features
+
+A quick EXIF viewer extension for PNG and JPG images with the following capabilities:
+
+- **⭐ Favorites**: Bookmark your most important EXIF fields for quick access
+- **👁️ Show/Hide Fields**: Control which EXIF data to display, hiding unnecessary information
+- **📋 JSON Formatting**: Convert EXIF data to clean, readable JSON format
 
 ## Installation
 
