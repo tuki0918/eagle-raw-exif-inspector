@@ -6,6 +6,7 @@ declare const eagle: {
   };
   item: {
     getSelected: () => Promise<unknown[]>;
+    modifyTags: (options: { id: string; tags?: string[]; annotation?: string }) => Promise<unknown>;
   };
 };
 
