@@ -19,7 +19,7 @@ export function useEaglePlugin() {
           return;
         }
 
-        const selectedItem = items[0] as { filePath: string; id: string; annotation?: string };
+        const selectedItem = items[0];
         if (!selectedItem.filePath) {
           setItem(null);
           return;
@@ -29,20 +29,24 @@ export function useEaglePlugin() {
         setItem(data ?? null);
 
         // Check if annotation is set and if metadata was successfully extracted
-        if (data && (!selectedItem.annotation || selectedItem.annotation.trim() === "")) {
+        if (
+          data &&
+          (!selectedItem.annotation || selectedItem.annotation.trim() === "")
+        ) {
           try {
             // Convert metadata to text format
             const metadataText = JSON.stringify(data, null, 2);
-            
+
             // Save metadata to annotation
-            await eagle.item.modifyTags({
-              id: selectedItem.id,
-              annotation: metadataText
-            });
-            
+            selectedItem.annotation = metadataText;
+            await selectedItem.save();
+
             console.log("Metadata saved to annotation");
           } catch (annotationError) {
-            console.log("Failed to save metadata to annotation:", annotationError);
+            console.log(
+              "Failed to save metadata to annotation:",
+              annotationError,
+            );
           }
         }
       } catch (e) {
