@@ -35,7 +35,7 @@ export function useEaglePlugin() {
         ) {
           try {
             // Convert metadata to text format
-            const metadataText = JSON.stringify(data, null, 2);
+            const metadataText = JSON.stringify(data);
 
             // Save metadata to annotation
             selectedItem.annotation = metadataText;

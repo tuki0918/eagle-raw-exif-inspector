@@ -62,7 +62,7 @@ describe("useEaglePlugin", () => {
     });
 
     // Verify that annotation was set and save was called
-    expect(mockItem.annotation).toBe(JSON.stringify(mockMetadata, null, 2));
+    expect(mockItem.annotation).toBe(JSON.stringify(mockMetadata));
     expect(mockSave).toHaveBeenCalled();
   });
 
