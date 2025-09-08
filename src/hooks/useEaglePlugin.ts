@@ -2,7 +2,7 @@ import type { EagleTheme } from "@/components/EagleThemeWrapper";
 import { parseMetadata } from "@/utils/exif";
 import { useEffect, useState } from "react";
 
-export function useEaglePlugin() {
+export function useEaglePlugin(autoSaveEnabled: boolean = false) {
   const [theme, setTheme] = useState<EagleTheme>("LIGHT");
   const [item, setItem] = useState<{ [key: string]: unknown } | null>(null);
 
@@ -28,8 +28,9 @@ export function useEaglePlugin() {
         const data = await parseMetadata(selectedItem.filePath);
         setItem(data ?? null);
 
-        // Check if annotation is set and if metadata was successfully extracted
+        // Check if auto-save is enabled and if annotation is set and if metadata was successfully extracted
         if (
+          autoSaveEnabled &&
           data &&
           (!selectedItem.annotation || selectedItem.annotation.trim() === "")
         ) {
@@ -61,7 +62,7 @@ export function useEaglePlugin() {
     });
 
     eagle.onThemeChanged(handleThemeChange);
-  }, []);
+  }, [autoSaveEnabled]);
 
   return { theme, item };
 }

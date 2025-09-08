@@ -26,7 +26,7 @@ describe("useEaglePlugin", () => {
     (global as Record<string, unknown>).eagle = mockEagle;
   });
 
-  it("should save metadata to annotation when annotation is empty", async () => {
+  it("should save metadata to annotation when annotation is empty and auto-save is enabled", async () => {
     const { parseMetadata: parseMetadataModule } = await import(
       "../utils/exif"
     );
@@ -51,7 +51,7 @@ describe("useEaglePlugin", () => {
     mockEagle.item.getSelected.mockResolvedValue([mockItem]);
     mockParseMetadata.mockResolvedValue(mockMetadata);
 
-    const { result } = renderHook(() => useEaglePlugin());
+    const { result } = renderHook(() => useEaglePlugin(true)); // Enable auto-save
 
     // Trigger the plugin creation callback
     const createCallback = mockEagle.onPluginCreate.mock.calls[0][0];
@@ -64,6 +64,46 @@ describe("useEaglePlugin", () => {
     // Verify that annotation was set and save was called
     expect(mockItem.annotation).toBe(JSON.stringify(mockMetadata));
     expect(mockSave).toHaveBeenCalled();
+  });
+
+  it("should not save metadata when auto-save is disabled", async () => {
+    const { parseMetadata: parseMetadataModule } = await import(
+      "../utils/exif"
+    );
+    const mockParseMetadata = parseMetadataModule as ReturnType<typeof vi.fn>;
+
+    // Mock selected item with empty annotation and save method
+    const mockSave = vi.fn().mockResolvedValue({});
+    const mockItem = {
+      id: "test-id",
+      filePath: "/path/to/image.jpg",
+      annotation: "",
+      save: mockSave,
+    };
+
+    const mockMetadata = {
+      Make: "Canon",
+      Model: "EOS R5",
+    };
+
+    // Setup mocks
+    mockEagle.item.getSelected.mockResolvedValue([mockItem]);
+    mockParseMetadata.mockResolvedValue(mockMetadata);
+
+    const { result } = renderHook(() => useEaglePlugin(false)); // Disable auto-save
+
+    // Trigger the plugin creation callback
+    const createCallback = mockEagle.onPluginCreate.mock.calls[0][0];
+    await createCallback();
+
+    await waitFor(() => {
+      expect(result.current.item).toEqual(mockMetadata);
+    });
+
+    // Verify that save was NOT called since auto-save is disabled
+    expect(mockSave).not.toHaveBeenCalled();
+    // Verify annotation was not changed
+    expect(mockItem.annotation).toBe("");
   });
 
   it("should not save metadata to annotation when annotation already exists", async () => {
@@ -90,7 +130,7 @@ describe("useEaglePlugin", () => {
     mockEagle.item.getSelected.mockResolvedValue([mockItem]);
     mockParseMetadata.mockResolvedValue(mockMetadata);
 
-    const { result } = renderHook(() => useEaglePlugin());
+    const { result } = renderHook(() => useEaglePlugin(true)); // Enable auto-save
 
     // Trigger the plugin creation callback
     const createCallback = mockEagle.onPluginCreate.mock.calls[0][0];
@@ -125,7 +165,7 @@ describe("useEaglePlugin", () => {
     mockEagle.item.getSelected.mockResolvedValue([mockItem]);
     mockParseMetadata.mockResolvedValue(null);
 
-    const { result } = renderHook(() => useEaglePlugin());
+    const { result } = renderHook(() => useEaglePlugin(true)); // Enable auto-save
 
     // Trigger the plugin creation callback
     const createCallback = mockEagle.onPluginCreate.mock.calls[0][0];
