@@ -15,7 +15,10 @@ export function useAutoSavePreference() {
   });
 
   useEffect(() => {
-    localStorage.setItem(AUTO_SAVE_PREFERENCE_KEY, JSON.stringify(autoSaveEnabled));
+    localStorage.setItem(
+      AUTO_SAVE_PREFERENCE_KEY,
+      JSON.stringify(autoSaveEnabled),
+    );
   }, [autoSaveEnabled]);
 
   return {

@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AutoSaveToggle } from "./AutoSaveToggle";
 
@@ -15,7 +15,9 @@ describe("AutoSaveToggle", () => {
   });
 
   it("should render toggle with correct initial state when enabled", async () => {
-    const { useAutoSavePreference } = await import("../hooks/useAutoSavePreference");
+    const { useAutoSavePreference } = await import(
+      "../hooks/useAutoSavePreference"
+    );
     vi.mocked(useAutoSavePreference).mockReturnValue({
       autoSaveEnabled: true,
       setAutoSaveEnabled: mockSetAutoSaveEnabled,
@@ -23,15 +25,23 @@ describe("AutoSaveToggle", () => {
 
     render(<AutoSaveToggle />);
 
-    expect(screen.getByText("Auto-save metadata to annotations")).toBeInTheDocument();
-    expect(screen.getByText("Automatically save EXIF metadata to Eagle item annotations when empty")).toBeInTheDocument();
-    
+    expect(
+      screen.getByText("Auto-save metadata to annotations"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Automatically save EXIF metadata to Eagle item annotations when empty",
+      ),
+    ).toBeInTheDocument();
+
     const checkbox = screen.getByRole("checkbox");
     expect(checkbox).toBeChecked();
   });
 
   it("should render toggle with correct initial state when disabled", async () => {
-    const { useAutoSavePreference } = await import("../hooks/useAutoSavePreference");
+    const { useAutoSavePreference } = await import(
+      "../hooks/useAutoSavePreference"
+    );
     vi.mocked(useAutoSavePreference).mockReturnValue({
       autoSaveEnabled: false,
       setAutoSaveEnabled: mockSetAutoSaveEnabled,
@@ -44,7 +54,9 @@ describe("AutoSaveToggle", () => {
   });
 
   it("should call setAutoSaveEnabled when toggle is clicked", async () => {
-    const { useAutoSavePreference } = await import("../hooks/useAutoSavePreference");
+    const { useAutoSavePreference } = await import(
+      "../hooks/useAutoSavePreference"
+    );
     vi.mocked(useAutoSavePreference).mockReturnValue({
       autoSaveEnabled: false,
       setAutoSaveEnabled: mockSetAutoSaveEnabled,

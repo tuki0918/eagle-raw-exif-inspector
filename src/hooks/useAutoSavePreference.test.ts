@@ -1,4 +1,4 @@
-import { renderHook, act } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useAutoSavePreference } from "./useAutoSavePreference";
 
@@ -10,7 +10,7 @@ const localStorageMock = {
   clear: vi.fn(),
 };
 
-Object.defineProperty(window, 'localStorage', {
+Object.defineProperty(window, "localStorage", {
   value: localStorageMock,
 });
 
@@ -25,7 +25,9 @@ describe("useAutoSavePreference", () => {
     const { result } = renderHook(() => useAutoSavePreference());
 
     expect(result.current.autoSaveEnabled).toBe(false);
-    expect(localStorageMock.getItem).toHaveBeenCalledWith("eagle-exif-auto-save-enabled");
+    expect(localStorageMock.getItem).toHaveBeenCalledWith(
+      "eagle-exif-auto-save-enabled",
+    );
   });
 
   it("should load stored preference when it exists", () => {
@@ -47,7 +49,7 @@ describe("useAutoSavePreference", () => {
 
     expect(localStorageMock.setItem).toHaveBeenCalledWith(
       "eagle-exif-auto-save-enabled",
-      "true"
+      "true",
     );
     expect(result.current.autoSaveEnabled).toBe(true);
   });

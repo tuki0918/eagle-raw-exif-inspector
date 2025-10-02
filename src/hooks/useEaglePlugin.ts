@@ -2,7 +2,7 @@ import type { EagleTheme } from "@/components/EagleThemeWrapper";
 import { parseMetadata } from "@/utils/exif";
 import { useEffect, useState } from "react";
 
-export function useEaglePlugin(autoSaveEnabled: boolean = false) {
+export function useEaglePlugin(autoSaveEnabled = false) {
   const [theme, setTheme] = useState<EagleTheme>("LIGHT");
   const [item, setItem] = useState<{ [key: string]: unknown } | null>(null);
 

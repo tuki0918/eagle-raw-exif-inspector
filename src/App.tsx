@@ -1,6 +1,6 @@
 import "@/App.css";
-import { AutoSaveToggle } from "@/components/AutoSaveToggle";
 import ImageExifMetadata from "@/components/ImageExifMetadata";
+import PreferencesSection from "@/components/PreferencesSection";
 import SelectionCopyPopup from "@/components/SelectionCopyPopup";
 import ThemeWrapper from "@/components/ThemeWrapper";
 import { useAutoSavePreference } from "@/hooks/useAutoSavePreference";
@@ -13,7 +13,7 @@ function App() {
   return (
     <ThemeWrapper theme={theme}>
       <ImageExifMetadata item={item} />
-      <AutoSaveToggle />
+      <PreferencesSection />
       <SelectionCopyPopup />
     </ThemeWrapper>
   );
