@@ -1,8 +1,10 @@
 import type { EagleTheme } from "@/components/EagleThemeWrapper";
+import { useAutoSavePreference } from "@/hooks/useAutoSavePreference";
 import { parseMetadata } from "@/utils/exif";
 import { useEffect, useState } from "react";
 
-export function useEaglePlugin(autoSaveEnabled = false) {
+export function useEaglePlugin() {
+  const { autoSaveEnabled } = useAutoSavePreference();
   const [theme, setTheme] = useState<EagleTheme>("LIGHT");
   const [item, setItem] = useState<{ [key: string]: unknown } | null>(null);
 

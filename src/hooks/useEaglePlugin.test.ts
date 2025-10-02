@@ -19,6 +19,11 @@ vi.mock("../utils/exif", () => ({
   parseMetadata: vi.fn(),
 }));
 
+// Mock the useAutoSavePreference hook
+vi.mock("./useAutoSavePreference", () => ({
+  useAutoSavePreference: vi.fn(),
+}));
+
 describe("useEaglePlugin", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -30,7 +35,19 @@ describe("useEaglePlugin", () => {
     const { parseMetadata: parseMetadataModule } = await import(
       "../utils/exif"
     );
+    const { useAutoSavePreference: useAutoSavePreferenceModule } = await import(
+      "./useAutoSavePreference"
+    );
     const mockParseMetadata = parseMetadataModule as ReturnType<typeof vi.fn>;
+    const mockUseAutoSavePreference = useAutoSavePreferenceModule as ReturnType<
+      typeof vi.fn
+    >;
+
+    // Mock auto-save preference to return enabled
+    mockUseAutoSavePreference.mockReturnValue({
+      autoSaveEnabled: true,
+      setAutoSaveEnabled: vi.fn(),
+    });
 
     // Mock selected item with empty annotation and save method
     const mockSave = vi.fn().mockResolvedValue({});
@@ -51,7 +68,7 @@ describe("useEaglePlugin", () => {
     mockEagle.item.getSelected.mockResolvedValue([mockItem]);
     mockParseMetadata.mockResolvedValue(mockMetadata);
 
-    const { result } = renderHook(() => useEaglePlugin(true)); // Enable auto-save
+    const { result } = renderHook(() => useEaglePlugin());
 
     // Trigger the plugin creation callback
     const createCallback = mockEagle.onPluginCreate.mock.calls[0][0];
@@ -70,7 +87,19 @@ describe("useEaglePlugin", () => {
     const { parseMetadata: parseMetadataModule } = await import(
       "../utils/exif"
     );
+    const { useAutoSavePreference: useAutoSavePreferenceModule } = await import(
+      "./useAutoSavePreference"
+    );
     const mockParseMetadata = parseMetadataModule as ReturnType<typeof vi.fn>;
+    const mockUseAutoSavePreference = useAutoSavePreferenceModule as ReturnType<
+      typeof vi.fn
+    >;
+
+    // Mock auto-save preference to return disabled
+    mockUseAutoSavePreference.mockReturnValue({
+      autoSaveEnabled: false,
+      setAutoSaveEnabled: vi.fn(),
+    });
 
     // Mock selected item with empty annotation and save method
     const mockSave = vi.fn().mockResolvedValue({});
@@ -90,7 +119,7 @@ describe("useEaglePlugin", () => {
     mockEagle.item.getSelected.mockResolvedValue([mockItem]);
     mockParseMetadata.mockResolvedValue(mockMetadata);
 
-    const { result } = renderHook(() => useEaglePlugin(false)); // Disable auto-save
+    const { result } = renderHook(() => useEaglePlugin());
 
     // Trigger the plugin creation callback
     const createCallback = mockEagle.onPluginCreate.mock.calls[0][0];
@@ -110,7 +139,19 @@ describe("useEaglePlugin", () => {
     const { parseMetadata: parseMetadataModule } = await import(
       "../utils/exif"
     );
+    const { useAutoSavePreference: useAutoSavePreferenceModule } = await import(
+      "./useAutoSavePreference"
+    );
     const mockParseMetadata = parseMetadataModule as ReturnType<typeof vi.fn>;
+    const mockUseAutoSavePreference = useAutoSavePreferenceModule as ReturnType<
+      typeof vi.fn
+    >;
+
+    // Mock auto-save preference to return enabled
+    mockUseAutoSavePreference.mockReturnValue({
+      autoSaveEnabled: true,
+      setAutoSaveEnabled: vi.fn(),
+    });
 
     // Mock selected item with existing annotation and save method
     const mockSave = vi.fn().mockResolvedValue({});
@@ -130,7 +171,7 @@ describe("useEaglePlugin", () => {
     mockEagle.item.getSelected.mockResolvedValue([mockItem]);
     mockParseMetadata.mockResolvedValue(mockMetadata);
 
-    const { result } = renderHook(() => useEaglePlugin(true)); // Enable auto-save
+    const { result } = renderHook(() => useEaglePlugin());
 
     // Trigger the plugin creation callback
     const createCallback = mockEagle.onPluginCreate.mock.calls[0][0];
@@ -150,7 +191,19 @@ describe("useEaglePlugin", () => {
     const { parseMetadata: parseMetadataModule } = await import(
       "../utils/exif"
     );
+    const { useAutoSavePreference: useAutoSavePreferenceModule } = await import(
+      "./useAutoSavePreference"
+    );
     const mockParseMetadata = parseMetadataModule as ReturnType<typeof vi.fn>;
+    const mockUseAutoSavePreference = useAutoSavePreferenceModule as ReturnType<
+      typeof vi.fn
+    >;
+
+    // Mock auto-save preference to return enabled
+    mockUseAutoSavePreference.mockReturnValue({
+      autoSaveEnabled: true,
+      setAutoSaveEnabled: vi.fn(),
+    });
 
     // Mock selected item with empty annotation and save method
     const mockSave = vi.fn().mockResolvedValue({});
@@ -165,7 +218,7 @@ describe("useEaglePlugin", () => {
     mockEagle.item.getSelected.mockResolvedValue([mockItem]);
     mockParseMetadata.mockResolvedValue(null);
 
-    const { result } = renderHook(() => useEaglePlugin(true)); // Enable auto-save
+    const { result } = renderHook(() => useEaglePlugin());
 
     // Trigger the plugin creation callback
     const createCallback = mockEagle.onPluginCreate.mock.calls[0][0];
