@@ -1,8 +1,10 @@
 import type { EagleTheme } from "@/components/EagleThemeWrapper";
+import { useAutoSavePreference } from "@/hooks/useAutoSavePreference";
 import { parseMetadata } from "@/utils/exif";
 import { useEffect, useState } from "react";
 
 export function useEaglePlugin() {
+  const { autoSaveEnabled } = useAutoSavePreference();
   const [theme, setTheme] = useState<EagleTheme>("LIGHT");
   const [item, setItem] = useState<{ [key: string]: unknown } | null>(null);
 
@@ -19,14 +21,37 @@ export function useEaglePlugin() {
           return;
         }
 
-        const item = items[0] as { filePath: string };
-        if (!item.filePath) {
+        const selectedItem = items[0];
+        if (!selectedItem.filePath) {
           setItem(null);
           return;
         }
 
-        const data = await parseMetadata(item.filePath);
+        const data = await parseMetadata(selectedItem.filePath);
         setItem(data ?? null);
+
+        // Check if auto-save is enabled and if annotation is set and if metadata was successfully extracted
+        if (
+          autoSaveEnabled &&
+          data &&
+          (!selectedItem.annotation || selectedItem.annotation.trim() === "")
+        ) {
+          try {
+            // Convert metadata to text format
+            const metadataText = JSON.stringify(data);
+
+            // Save metadata to annotation
+            selectedItem.annotation = metadataText;
+            await selectedItem.save();
+
+            console.log("Metadata saved to annotation");
+          } catch (annotationError) {
+            console.log(
+              "Failed to save metadata to annotation:",
+              annotationError,
+            );
+          }
+        }
       } catch (e) {
         console.log("Failed to extract metadata:", e);
         setItem(null);
@@ -39,7 +64,7 @@ export function useEaglePlugin() {
     });
 
     eagle.onThemeChanged(handleThemeChange);
-  }, []);
+  }, [autoSaveEnabled]);
 
   return { theme, item };
 }

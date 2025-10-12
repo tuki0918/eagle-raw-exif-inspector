@@ -5,9 +5,16 @@ declare const eagle: {
     theme: string;
   };
   item: {
-    getSelected: () => Promise<unknown[]>;
+    getSelected: () => Promise<EagleItem[]>;
   };
 };
+
+interface EagleItem {
+  id: string;
+  filePath: string;
+  annotation?: string;
+  save: () => Promise<unknown>;
+}
 
 declare const i18next: {
   t: (key: string) => string;
