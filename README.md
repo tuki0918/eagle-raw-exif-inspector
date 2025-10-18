@@ -6,7 +6,7 @@
 
 ## Features
 
-A quick EXIF viewer extension for PNG and JPG images with the following capabilities:
+A quick EXIF viewer extension for PNG, JPEG, and WebP images with the following features:
 
 - **⭐ Favorites**: Bookmark your most important EXIF fields for quick access
 - **👁️ Show/Hide Fields**: Control which EXIF data to display, hiding unnecessary information
