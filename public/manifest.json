@@ -10,7 +10,7 @@
   "keywords": ["exif", "stable diffusion", "metadata"],
   "devTools": true,
   "preview": {
-    "jpg,png": {
+    "jpg,png,webp": {
       "inspector": {
         "path": "index.html",
         "height": 100,

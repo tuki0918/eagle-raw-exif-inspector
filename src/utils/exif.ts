@@ -1,5 +1,5 @@
 import { extractNovelAIMetadata } from "@/lib/novelai";
-import exifr from "exifr";
+import ExifReader from "exifreader";
 
 type ImageMetadata = Record<string, unknown>;
 
@@ -19,9 +19,20 @@ async function parseExifMetadata(
   filePath: string,
 ): Promise<ImageMetadata | null> {
   try {
-    const data = await exifr.parse(filePath);
-    return data ?? null;
-  } catch {
+    const tags = await ExifReader.load(filePath);
+    const metadata: ImageMetadata = {};
+
+    for (const [k, v] of Object.entries(tags)) {
+      if (v && typeof v === "object" && ("description" in v || "value" in v)) {
+        metadata[k] = v.description || v.value;
+      } else {
+        metadata[k] = v;
+      }
+    }
+
+    return Object.keys(metadata).length > 0 ? metadata : null;
+  } catch (error) {
+    console.error("Failed to parse metadata:", error);
     return null;
   }
 }

@@ -19,13 +19,13 @@ export function useEaglePlugin() {
           return;
         }
 
-        const item = items[0] as { filePath: string };
-        if (!item.filePath) {
+        const item = items[0] as { fileURL: string };
+        if (!item.fileURL) {
           setItem(null);
           return;
         }
 
-        const data = await parseMetadata(item.filePath);
+        const data = await parseMetadata(item.fileURL);
         setItem(data ?? null);
       } catch (e) {
         console.log("Failed to extract metadata:", e);
