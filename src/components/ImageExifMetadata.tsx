@@ -1,15 +1,19 @@
 import { useExifFieldPreferences } from "@/hooks/useExifFieldPreferences";
 import { useJsonFormatter } from "@/hooks/useJsonFormatter";
+import type { C2PAInfo } from "@/types/c2pa.d.ts";
+import C2PABadge from "./C2PABadge";
 import FieldActionButtons from "./FieldActionButtons";
 import FieldValue from "./FieldValue";
 import HiddenFieldsSection from "./HiddenFieldsSection";
 
 const ImageExifMetadata = ({
   item,
+  c2paInfo,
 }: {
   item: {
     [key: string]: unknown;
   } | null;
+  c2paInfo?: C2PAInfo | null;
 }) => {
   const { preferences, toggleFavorite, toggleHidden, isFavorite, isHidden } =
     useExifFieldPreferences();
@@ -44,6 +48,9 @@ const ImageExifMetadata = ({
 
   return (
     <>
+      {/* C2PA Badge */}
+      {c2paInfo && c2paInfo.hasC2PA && <C2PABadge c2paInfo={c2paInfo} />}
+
       {visibleEntries.map(([key, value], index) => {
         const isLastVisibleEntry = index === visibleEntries.length - 1;
         const hasVisibleEntries = visibleEntries.length > 0;

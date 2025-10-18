@@ -16,6 +16,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@contentauth/c2pa-web": "^0.4.0",
     "@tailwindcss/vite": "^4.1.7",
     "exifreader": "^4.32.0",
     "lucide-react": "^0.513.0",

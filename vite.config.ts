@@ -18,4 +18,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     },
   },
+  build: {
+    chunkSizeWarningLimit: 11000, // Increase limit for C2PA WASM inline bundle
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Separate C2PA library into its own chunk
+          c2pa: ["@contentauth/c2pa-web"],
+        },
+      },
+    },
+  },
 });

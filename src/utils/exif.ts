@@ -1,7 +1,14 @@
 import { extractNovelAIMetadata } from "@/lib/novelai";
+import { parseC2PAMetadata } from "@/utils/c2pa";
+import type { C2PAInfo } from "@/types/c2pa.d.ts";
 import ExifReader from "exifreader";
 
 type ImageMetadata = Record<string, unknown>;
+
+export interface ParsedMetadata {
+  metadata: ImageMetadata | null;
+  c2paInfo: C2PAInfo | null;
+}
 
 async function parseNovelAIMetadata(
   filePath: string,
@@ -48,4 +55,30 @@ export async function parseMetadata(
 
   // If NovelAI metadata is not found, parse EXIF data
   return await parseExifMetadata(filePath);
+}
+
+/**
+ * Parse both metadata and C2PA information from a file
+ * @param filePath - The file path to parse
+ * @returns Object containing both metadata and C2PA info
+ */
+export async function parseMetadataWithC2PA(
+  filePath: string,
+): Promise<ParsedMetadata> {
+  // Parse regular metadata
+  const metadata = await parseMetadata(filePath);
+
+  // Parse C2PA information in parallel
+  let c2paInfo: C2PAInfo | null = null;
+  try {
+    c2paInfo = await parseC2PAMetadata(filePath);
+  } catch (error) {
+    console.error("Failed to parse C2PA metadata:", error);
+    c2paInfo = { hasC2PA: false };
+  }
+
+  return {
+    metadata,
+    c2paInfo,
+  };
 }

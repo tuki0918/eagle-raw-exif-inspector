@@ -5,11 +5,11 @@ import ThemeWrapper from "@/components/ThemeWrapper";
 import { useEaglePlugin } from "@/hooks/useEaglePlugin";
 
 function App() {
-  const { theme, item } = useEaglePlugin();
+  const { theme, item, c2paInfo } = useEaglePlugin();
 
   return (
     <ThemeWrapper theme={theme}>
-      <ImageExifMetadata item={item} />
+      <ImageExifMetadata item={item} c2paInfo={c2paInfo} />
       <SelectionCopyPopup />
     </ThemeWrapper>
   );
