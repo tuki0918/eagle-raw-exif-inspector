@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 export function useEaglePlugin() {
   const [theme, setTheme] = useState<EagleTheme>("LIGHT");
   const [item, setItem] = useState<{ [key: string]: unknown } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const handleThemeChange = (theme: unknown) => {
@@ -12,6 +13,7 @@ export function useEaglePlugin() {
     };
 
     const findExifData = async () => {
+      setIsLoading(true);
       try {
         const items = await eagle.item.getSelected();
         if (items.length !== 1) {
@@ -30,6 +32,8 @@ export function useEaglePlugin() {
       } catch (e) {
         console.log("Failed to extract metadata:", e);
         setItem(null);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -41,5 +45,5 @@ export function useEaglePlugin() {
     eagle.onThemeChanged(handleThemeChange);
   }, []);
 
-  return { theme, item };
+  return { theme, item, isLoading };
 }
