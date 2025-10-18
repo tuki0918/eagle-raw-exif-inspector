@@ -1,3 +1,7 @@
+## [2.1.0] - 2025-10-19
+### Added
+- Added WebP format support
+
 ## [2.0.0] - 2025-08-08
 ### Added
 - Added Favorites feature to bookmark important EXIF fields for quick access
