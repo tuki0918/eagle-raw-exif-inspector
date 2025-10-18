@@ -14,11 +14,11 @@ const FieldValue = ({ value, formatValue, fieldName }: FieldValueProps) => {
   return (
     <div className="py-3 px-4 item-value rounded-md max-h-[500px] overflow-y-auto">
       {isFormatted ? (
-        <pre className="whitespace-pre-wrap font-mono text-sm overflow-x-auto">
+        <pre className="whitespace-pre-wrap font-mono text-sm overflow-x-auto min-h-6">
           {renderedValue}
         </pre>
       ) : (
-        renderedValue
+        <div className="min-h-6">{renderedValue}</div>
       )}
     </div>
   );
