@@ -1,7 +1,7 @@
 import { useExifFieldPreferences } from "@/hooks/useExifFieldPreferences";
 import { useJsonFormatter } from "@/hooks/useJsonFormatter";
-import { isFormattedJson, renderValue } from "@/utils/renderValue";
 import FieldActionButtons from "./FieldActionButtons";
+import FieldValue from "./FieldValue";
 import HiddenFieldsSection from "./HiddenFieldsSection";
 
 const ImageExifMetadata = ({
@@ -69,21 +69,11 @@ const ImageExifMetadata = ({
                 onToggleFormat={toggleFormat}
               />
             </div>
-            <div className="py-3 px-4 item-value rounded-md">
-              {(() => {
-                const formattedValue = formatValue(value, key);
-                const renderedValue = renderValue(formattedValue);
-                const isFormatted = isFormattedJson(renderedValue);
-
-                return isFormatted ? (
-                  <pre className="whitespace-pre-wrap font-mono text-sm overflow-x-auto">
-                    {renderedValue}
-                  </pre>
-                ) : (
-                  renderedValue
-                );
-              })()}
-            </div>
+            <FieldValue
+              fieldName={key}
+              value={value}
+              formatValue={formatValue}
+            />
           </div>
         );
       })}

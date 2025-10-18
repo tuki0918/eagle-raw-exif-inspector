@@ -1,7 +1,7 @@
-import { isFormattedJson, renderValue } from "@/utils/renderValue";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import FieldActionButtons from "./FieldActionButtons";
+import FieldValue from "./FieldValue";
 
 interface HiddenFieldsSectionProps {
   hiddenEntries: [string, unknown][];
@@ -68,21 +68,11 @@ const HiddenFieldsSection = ({
                   onToggleFormat={onToggleFormat}
                 />
               </div>
-              <div className="py-3 px-4 item-value rounded-md">
-                {(() => {
-                  const formattedValue = formatValue(value, key);
-                  const renderedValue = renderValue(formattedValue);
-                  const isFormatted = isFormattedJson(renderedValue);
-
-                  return isFormatted ? (
-                    <pre className="whitespace-pre-wrap font-mono text-sm overflow-x-auto">
-                      {renderedValue}
-                    </pre>
-                  ) : (
-                    renderedValue
-                  );
-                })()}
-              </div>
+              <FieldValue
+                fieldName={key}
+                value={value}
+                formatValue={formatValue}
+              />
             </div>
           ))}
         </div>
