@@ -1,6 +1,6 @@
 import type { C2PAInfo } from "@/types/c2pa.d.ts";
 import { extractC2PAMetadata } from "@/utils/c2pa";
-import { Info, Shield, ShieldAlert, ShieldCheck } from "lucide-react";
+import { Info } from "lucide-react";
 
 interface C2PABadgeProps {
   c2paInfo: C2PAInfo;
@@ -20,46 +20,41 @@ const C2PABadge = ({ c2paInfo, onDetailsClick }: C2PABadgeProps) => {
     switch (validationStatus) {
       case "valid":
         return {
-          icon: ShieldCheck,
           className: "bg-green-50 border-green-200 text-green-800",
-          iconClassName: "text-green-600",
           label: "Content Credentials Verified",
         };
       case "warning":
         return {
-          icon: ShieldAlert,
           className: "bg-yellow-50 border-yellow-200 text-yellow-800",
-          iconClassName: "text-yellow-600",
           label: "Content Credentials (Warnings)",
         };
       case "error":
         return {
-          icon: Shield,
           className: "bg-red-50 border-red-200 text-red-800",
-          iconClassName: "text-red-600",
           label: "Content Credentials (Issues)",
         };
       default:
         return {
-          icon: Shield,
           className: "bg-blue-50 border-blue-200 text-blue-800",
-          iconClassName: "text-blue-600",
           label: "Content Credentials",
         };
     }
   };
 
   const config = getStatusConfig();
-  const Icon = config.icon;
 
   return (
     <div
       className={`mb-4 p-3 rounded-lg border-2 ${config.className} transition-all`}
     >
       <div className="flex items-start gap-3">
-        <Icon
-          className={`w-5 h-5 mt-0.5 ${config.iconClassName} flex-shrink-0`}
-        />
+        <div className="flex-shrink-0 mt-0.5">
+          <img
+            src="/content_credentials_logo.svg"
+            alt="Content Credentials"
+            className="h-5 w-auto"
+          />
+        </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2 mb-1">
             <h3 className="font-semibold text-sm">{config.label}</h3>
