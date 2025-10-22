@@ -28,7 +28,9 @@ export function useEaglePlugin() {
           return;
         }
 
-        const { metadata, c2paInfo } = await parseMetadataWithC2PA(item.fileURL);
+        const { metadata, c2paInfo } = await parseMetadataWithC2PA(
+          item.fileURL,
+        );
         setItem(metadata ?? null);
         setC2paInfo(c2paInfo ?? null);
       } catch (e) {

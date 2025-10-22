@@ -1,6 +1,6 @@
 import { extractNovelAIMetadata } from "@/lib/novelai";
-import { parseC2PAMetadata } from "@/utils/c2pa";
 import type { C2PAInfo } from "@/types/c2pa.d.ts";
+import { parseC2PAMetadata } from "@/utils/c2pa";
 import ExifReader from "exifreader";
 
 type ImageMetadata = Record<string, unknown>;

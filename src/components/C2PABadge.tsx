@@ -1,6 +1,6 @@
-import { Shield, ShieldCheck, ShieldAlert, Info } from "lucide-react";
 import type { C2PAInfo } from "@/types/c2pa.d.ts";
 import { extractC2PAMetadata } from "@/utils/c2pa";
+import { Info, Shield, ShieldAlert, ShieldCheck } from "lucide-react";
 
 interface C2PABadgeProps {
   c2paInfo: C2PAInfo;
@@ -57,7 +57,9 @@ const C2PABadge = ({ c2paInfo, onDetailsClick }: C2PABadgeProps) => {
       className={`mb-4 p-3 rounded-lg border-2 ${config.className} transition-all`}
     >
       <div className="flex items-start gap-3">
-        <Icon className={`w-5 h-5 mt-0.5 ${config.iconClassName} flex-shrink-0`} />
+        <Icon
+          className={`w-5 h-5 mt-0.5 ${config.iconClassName} flex-shrink-0`}
+        />
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2 mb-1">
             <h3 className="font-semibold text-sm">{config.label}</h3>

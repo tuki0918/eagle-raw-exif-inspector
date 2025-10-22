@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { extractC2PAMetadata } from "./c2pa";
 import type { C2PAInfo } from "@/types/c2pa.d.ts";
+import { describe, expect, it } from "vitest";
+import { extractC2PAMetadata } from "./c2pa";
 
 describe("C2PA Utilities", () => {
   describe("extractC2PAMetadata", () => {
@@ -47,7 +47,7 @@ describe("C2PA Utilities", () => {
       };
 
       const result = extractC2PAMetadata(c2paInfo);
-      
+
       expect(result).not.toBeNull();
       expect(result?.title).toBe("Test Image");
       expect(result?.claimGenerator).toBe("Test Generator v1.0");
@@ -78,7 +78,7 @@ describe("C2PA Utilities", () => {
       };
 
       const result = extractC2PAMetadata(c2paInfo);
-      
+
       expect(result?.validationStatus).toBe("error");
     });
 
@@ -102,7 +102,7 @@ describe("C2PA Utilities", () => {
       };
 
       const result = extractC2PAMetadata(c2paInfo);
-      
+
       expect(result?.validationStatus).toBe("warning");
     });
   });

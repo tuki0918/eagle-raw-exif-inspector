@@ -1,9 +1,5 @@
-import { createC2pa } from "@contentauth/c2pa-web";
-import type {
-  C2PAInfo,
-  C2PAMetadata,
-  ManifestStore,
-} from "@/types/c2pa.d.ts";
+import type { C2PAInfo, C2PAMetadata, ManifestStore } from "@/types/c2pa.d.ts";
+import type { createC2pa } from "@contentauth/c2pa-web";
 
 // Singleton instance for c2pa
 let c2paInstance: Awaited<ReturnType<typeof createC2pa>> | null = null;
@@ -50,9 +46,7 @@ async function getC2paInstance() {
  * @param filePath - The file path or URL to check for C2PA data
  * @returns C2PAInfo object with hasC2PA flag and optional manifest store
  */
-export async function parseC2PAMetadata(
-  filePath: string,
-): Promise<C2PAInfo> {
+export async function parseC2PAMetadata(filePath: string): Promise<C2PAInfo> {
   try {
     const c2pa = await getC2paInstance();
 
@@ -133,7 +127,10 @@ export function extractC2PAMetadata(c2paInfo: C2PAInfo): C2PAMetadata | null {
   };
 
   // Determine validation status
-  if (manifestStore.validation_status && manifestStore.validation_status.length > 0) {
+  if (
+    manifestStore.validation_status &&
+    manifestStore.validation_status.length > 0
+  ) {
     const hasErrors = manifestStore.validation_status.some((status) =>
       status.code?.toLowerCase().includes("error"),
     );

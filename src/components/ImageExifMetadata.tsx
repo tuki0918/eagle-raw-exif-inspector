@@ -49,7 +49,7 @@ const ImageExifMetadata = ({
   return (
     <>
       {/* C2PA Badge */}
-      {c2paInfo && c2paInfo.hasC2PA && <C2PABadge c2paInfo={c2paInfo} />}
+      {c2paInfo?.hasC2PA && <C2PABadge c2paInfo={c2paInfo} />}
 
       {visibleEntries.map(([key, value], index) => {
         const isLastVisibleEntry = index === visibleEntries.length - 1;
