@@ -12,6 +12,17 @@ A quick EXIF viewer extension for PNG, JPEG, and WebP images with the following 
 - **👁️ Show/Hide Fields**: Control which EXIF data to display, hiding unnecessary information
 - **📋 JSON Formatting**: Convert EXIF data to clean, readable JSON format
 
+<details>
+<summary>Also supports images from:</summary>
+
+- `Stable Diffusion`
+- `NovelAI`
+- `Midjourney`
+- `Nijijourney`
+- `C2PA` (planned)
+
+</details>
+
 ## Installation
 
 Eagle Community: [Plugin page](https://community-en.eagle.cool/plugin/1152a2b2-499f-4d4e-afd2-2554fe44808a)
