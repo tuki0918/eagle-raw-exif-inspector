@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 *storybook.log
+
+# Eagle Plugin Artifacts
+*.eagleplugin
