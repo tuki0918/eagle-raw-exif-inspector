@@ -6,15 +6,23 @@ import HiddenFieldsSection from "./HiddenFieldsSection";
 
 const ImageExifMetadata = ({
   item,
+  parentFieldName = "",
 }: {
   item: {
     [key: string]: unknown;
   } | null;
+  parentFieldName?: string;
 }) => {
   const { preferences, toggleFavorite, toggleHidden, isFavorite, isHidden } =
     useExifFieldPreferences();
-  const { isFormatted, toggleFormat, canFormat, formatValue } =
-    useJsonFormatter();
+  const {
+    getFormatState,
+    isExpanded,
+    toggleFormat,
+    canFormat,
+    formatValue,
+    expandValue,
+  } = useJsonFormatter();
 
   if (item == null) {
     return (
@@ -27,16 +35,29 @@ const ImageExifMetadata = ({
   const allEntries = Object.entries(item);
 
   // Sort entries: favorites first (in order added), then regular, then hidden separately
-  const favoriteEntries = allEntries.filter(([key]) => isFavorite(key));
-  const regularEntries = allEntries.filter(
-    ([key]) => !isFavorite(key) && !isHidden(key),
-  );
-  const hiddenEntries = allEntries.filter(([key]) => isHidden(key));
+  const favoriteEntries = allEntries.filter(([key]) => {
+    const fullFieldName = parentFieldName ? `${parentFieldName}.${key}` : key;
+    return isFavorite(fullFieldName);
+  });
+  const regularEntries = allEntries.filter(([key]) => {
+    const fullFieldName = parentFieldName ? `${parentFieldName}.${key}` : key;
+    return !isFavorite(fullFieldName) && !isHidden(fullFieldName);
+  });
+  const hiddenEntries = allEntries.filter(([key]) => {
+    const fullFieldName = parentFieldName ? `${parentFieldName}.${key}` : key;
+    return isHidden(fullFieldName);
+  });
 
   // Sort favorites by their order in preferences.favorites array
   const sortedFavoriteEntries = favoriteEntries.sort(([keyA], [keyB]) => {
-    const indexA = preferences.favorites.indexOf(keyA);
-    const indexB = preferences.favorites.indexOf(keyB);
+    const fullFieldNameA = parentFieldName
+      ? `${parentFieldName}.${keyA}`
+      : keyA;
+    const fullFieldNameB = parentFieldName
+      ? `${parentFieldName}.${keyB}`
+      : keyB;
+    const indexA = preferences.favorites.indexOf(fullFieldNameA);
+    const indexB = preferences.favorites.indexOf(fullFieldNameB);
     return indexA - indexB;
   });
 
@@ -51,29 +72,45 @@ const ImageExifMetadata = ({
         const shouldAddMarginBottom =
           isLastVisibleEntry && hasVisibleEntries && hasHiddenEntries;
 
+        const fullFieldName = parentFieldName
+          ? `${parentFieldName}.${key}`
+          : key;
+        const formatState = getFormatState(fullFieldName);
+        const expanded = isExpanded(fullFieldName);
+        const expandedObject = expanded ? expandValue(value) : null;
+
         return (
           <div
-            key={key}
+            key={fullFieldName}
             className={`flex flex-col${shouldAddMarginBottom ? " mb-4" : ""}`}
           >
             <div className="py-3 item-label flex items-center justify-between">
-              <span>{key}</span>
+              <span>{fullFieldName}</span>
               <FieldActionButtons
-                fieldName={key}
-                isFavorite={isFavorite(key)}
-                isHidden={isHidden(key)}
+                fieldName={fullFieldName}
+                isFavorite={isFavorite(fullFieldName)}
+                isHidden={isHidden(fullFieldName)}
                 onToggleFavorite={toggleFavorite}
                 onToggleHidden={toggleHidden}
                 canFormat={canFormat(value)}
-                isFormatted={isFormatted(key)}
+                formatState={formatState}
                 onToggleFormat={toggleFormat}
               />
             </div>
-            <FieldValue
-              fieldName={key}
-              value={value}
-              formatValue={formatValue}
-            />
+            {expanded && expandedObject ? (
+              <div className="ml-4 border-l-2 border-gray-300 dark:border-gray-600 pl-4">
+                <ImageExifMetadata
+                  item={expandedObject}
+                  parentFieldName={fullFieldName}
+                />
+              </div>
+            ) : (
+              <FieldValue
+                fieldName={fullFieldName}
+                value={value}
+                formatValue={formatValue}
+              />
+            )}
           </div>
         );
       })}
@@ -85,9 +122,11 @@ const ImageExifMetadata = ({
         onToggleFavorite={toggleFavorite}
         onToggleHidden={toggleHidden}
         canFormat={canFormat}
-        isFormatted={isFormatted}
+        getFormatState={getFormatState}
         onToggleFormat={toggleFormat}
         formatValue={formatValue}
+        expandValue={expandValue}
+        parentFieldName={parentFieldName}
       />
     </>
   );

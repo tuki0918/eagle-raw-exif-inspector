@@ -76,7 +76,7 @@ const SelectionCopyPopup = () => {
       hideTimer.current = setTimeout(() => {
         setShow(false);
       }, HIDE_DELAY);
-    } catch (e) {
+    } catch {
       alert(i18next.t("message.copyFailed"));
     }
   }, [selectedText]);

@@ -1,23 +1,47 @@
 import { useState } from "react";
 
+export type FormatState = "none" | "formatted" | "expanded";
+
 export const useJsonFormatter = () => {
-  const [formattedFields, setFormattedFields] = useState<Set<string>>(
-    new Set(),
+  const [formatStates, setFormatStates] = useState<Map<string, FormatState>>(
+    new Map(),
   );
 
+  const getFormatState = (fieldName: string): FormatState => {
+    return formatStates.get(fieldName) ?? "none";
+  };
+
   const isFormatted = (fieldName: string): boolean => {
-    return formattedFields.has(fieldName);
+    const state = formatStates.get(fieldName);
+    return state === "formatted" || state === "expanded";
+  };
+
+  const isExpanded = (fieldName: string): boolean => {
+    return formatStates.get(fieldName) === "expanded";
   };
 
   const toggleFormat = (fieldName: string): void => {
-    setFormattedFields((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(fieldName)) {
-        newSet.delete(fieldName);
+    setFormatStates((prev) => {
+      const newMap = new Map(prev);
+      const currentState = newMap.get(fieldName) ?? "none";
+
+      // 3状態を循環: none → formatted → expanded → none
+      let nextState: FormatState;
+      if (currentState === "none") {
+        nextState = "formatted";
+      } else if (currentState === "formatted") {
+        nextState = "expanded";
       } else {
-        newSet.add(fieldName);
+        nextState = "none";
       }
-      return newSet;
+
+      if (nextState === "none") {
+        newMap.delete(fieldName);
+      } else {
+        newMap.set(fieldName, nextState);
+      }
+
+      return newMap;
     });
   };
 
@@ -65,20 +89,25 @@ export const useJsonFormatter = () => {
         }
       }
 
-      if (isFormatted(fieldName)) {
+      const state = getFormatState(fieldName);
+
+      if (state === "expanded") {
+        // 展開状態の場合、オブジェクトをそのまま返す（展開されたフィールドが表示される）
+        return targetValue;
+      }
+      if (state === "formatted") {
         // フォーマット適用: インデント付きでフォーマット
         try {
           return JSON.stringify(targetValue, null, 2);
         } catch {
           return value;
         }
-      } else {
-        // フォーマット未適用: 1行で表示
-        try {
-          return JSON.stringify(targetValue);
-        } catch {
-          return value;
-        }
+      }
+      // フォーマット未適用: 1行で表示
+      try {
+        return JSON.stringify(targetValue);
+      } catch {
+        return value;
       }
     }
 
@@ -86,10 +115,38 @@ export const useJsonFormatter = () => {
     return value;
   };
 
+  // JSONオブジェクトを展開可能な形式に変換するヘルパー関数
+  const expandValue = (value: unknown): Record<string, unknown> | null => {
+    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+      return value as Record<string, unknown>;
+    }
+
+    // 文字列の場合はJSONとして解析を試みる
+    if (typeof value === "string") {
+      try {
+        const parsed = JSON.parse(value);
+        if (
+          typeof parsed === "object" &&
+          parsed !== null &&
+          !Array.isArray(parsed)
+        ) {
+          return parsed as Record<string, unknown>;
+        }
+      } catch {
+        // JSON解析に失敗した場合はnullを返す
+      }
+    }
+
+    return null;
+  };
+
   return {
+    getFormatState,
     isFormatted,
+    isExpanded,
     toggleFormat,
     canFormat,
     formatValue,
+    expandValue,
   };
 };

@@ -16,6 +16,7 @@
     "hiddenFieldSingle": "hidden field",
     "hiddenFieldPlural": "hidden fields",
     "formatJson": "JSONを整形",
+    "expandJson": "JSONを展開",
     "unformatJson": "整形を解除"
   }
 }

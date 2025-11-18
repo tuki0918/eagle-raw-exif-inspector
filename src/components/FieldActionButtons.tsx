@@ -1,3 +1,4 @@
+import type { FormatState } from "@/hooks/useJsonFormatter";
 import { Braces, Eye, EyeOff, Star } from "lucide-react";
 
 interface FieldActionButtonsProps {
@@ -7,7 +8,7 @@ interface FieldActionButtonsProps {
   onToggleFavorite: (fieldName: string) => void;
   onToggleHidden: (fieldName: string) => void;
   canFormat?: boolean;
-  isFormatted?: boolean;
+  formatState?: FormatState;
   onToggleFormat?: (fieldName: string) => void;
 }
 
@@ -18,28 +19,40 @@ const FieldActionButtons = ({
   onToggleFavorite,
   onToggleHidden,
   canFormat = false,
-  isFormatted = false,
+  formatState = "none",
   onToggleFormat,
 }: FieldActionButtonsProps) => {
+  const getFormatButtonColor = () => {
+    switch (formatState) {
+      case "formatted":
+        return "text-blue-500";
+      case "expanded":
+        return "text-green-500 dark:text-green-400";
+      default:
+        return "text-gray-400 dark:text-gray-500";
+    }
+  };
+
+  const getFormatButtonTitle = () => {
+    switch (formatState) {
+      case "formatted":
+        return i18next.t("message.expandJson");
+      case "expanded":
+        return i18next.t("message.unformatJson");
+      default:
+        return i18next.t("message.formatJson");
+    }
+  };
+
   return (
     <div className="flex items-center gap-1 ml-2">
       {canFormat && onToggleFormat && (
         <button
           type="button"
           onClick={() => onToggleFormat(fieldName)}
-          className={`p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ${
-            isFormatted ? "text-blue-500" : "text-gray-400 dark:text-gray-500"
-          }`}
-          title={
-            isFormatted
-              ? i18next.t("message.unformatJson")
-              : i18next.t("message.formatJson")
-          }
-          aria-label={
-            isFormatted
-              ? i18next.t("message.unformatJson")
-              : i18next.t("message.formatJson")
-          }
+          className={`p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ${getFormatButtonColor()}`}
+          title={getFormatButtonTitle()}
+          aria-label={getFormatButtonTitle()}
         >
           <Braces size={16} />
         </button>

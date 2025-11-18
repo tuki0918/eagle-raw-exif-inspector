@@ -16,6 +16,7 @@
     "hiddenFieldSingle": "hidden field",
     "hiddenFieldPlural": "hidden fields",
     "formatJson": "Pretty print JSON",
+    "expandJson": "Expand JSON",
     "unformatJson": "Compact JSON"
   }
 }

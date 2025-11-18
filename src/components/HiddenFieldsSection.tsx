@@ -1,7 +1,9 @@
+import type { FormatState } from "@/hooks/useJsonFormatter";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import FieldActionButtons from "./FieldActionButtons";
 import FieldValue from "./FieldValue";
+import ImageExifMetadata from "./ImageExifMetadata";
 
 interface HiddenFieldsSectionProps {
   hiddenEntries: [string, unknown][];
@@ -10,9 +12,11 @@ interface HiddenFieldsSectionProps {
   onToggleFavorite: (fieldName: string) => void;
   onToggleHidden: (fieldName: string) => void;
   canFormat?: (value: unknown) => boolean;
-  isFormatted?: (fieldName: string) => boolean;
+  getFormatState?: (fieldName: string) => FormatState;
   onToggleFormat?: (fieldName: string) => void;
   formatValue?: (value: unknown, fieldName: string) => unknown;
+  expandValue?: (value: unknown) => Record<string, unknown> | null;
+  parentFieldName?: string;
 }
 
 const HiddenFieldsSection = ({
@@ -22,9 +26,11 @@ const HiddenFieldsSection = ({
   onToggleFavorite,
   onToggleHidden,
   canFormat = () => false,
-  isFormatted = () => false,
+  getFormatState = () => "none",
   onToggleFormat,
   formatValue = (value) => value,
+  expandValue = () => null,
+  parentFieldName = "",
 }: HiddenFieldsSectionProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -53,28 +59,47 @@ const HiddenFieldsSection = ({
 
       {isExpanded && (
         <div className="mt-2">
-          {hiddenEntries.map(([key, value]) => (
-            <div key={key} className="flex flex-col">
-              <div className="py-3 item-label flex items-center justify-between">
-                <span>{key}</span>
-                <FieldActionButtons
-                  fieldName={key}
-                  isFavorite={isFavorite(key)}
-                  isHidden={isHidden(key)}
-                  onToggleFavorite={onToggleFavorite}
-                  onToggleHidden={onToggleHidden}
-                  canFormat={canFormat(value)}
-                  isFormatted={isFormatted(key)}
-                  onToggleFormat={onToggleFormat}
-                />
+          {hiddenEntries.map(([key, value]) => {
+            const fullFieldName = parentFieldName
+              ? `${parentFieldName}.${key}`
+              : key;
+            const formatState = getFormatState(fullFieldName);
+            const expanded =
+              formatState === "expanded" && expandValue(value) !== null;
+            const expandedObject = expanded ? expandValue(value) : null;
+
+            return (
+              <div key={fullFieldName} className="flex flex-col">
+                <div className="py-3 item-label flex items-center justify-between">
+                  <span>{fullFieldName}</span>
+                  <FieldActionButtons
+                    fieldName={fullFieldName}
+                    isFavorite={isFavorite(fullFieldName)}
+                    isHidden={isHidden(fullFieldName)}
+                    onToggleFavorite={onToggleFavorite}
+                    onToggleHidden={onToggleHidden}
+                    canFormat={canFormat(value)}
+                    formatState={formatState}
+                    onToggleFormat={onToggleFormat}
+                  />
+                </div>
+                {expanded && expandedObject ? (
+                  <div className="ml-4 border-l-2 border-gray-300 dark:border-gray-600 pl-4">
+                    <ImageExifMetadata
+                      item={expandedObject}
+                      parentFieldName={fullFieldName}
+                    />
+                  </div>
+                ) : (
+                  <FieldValue
+                    fieldName={fullFieldName}
+                    value={value}
+                    formatValue={formatValue}
+                  />
+                )}
               </div>
-              <FieldValue
-                fieldName={key}
-                value={value}
-                formatValue={formatValue}
-              />
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </>
