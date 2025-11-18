@@ -78,6 +78,7 @@ const ImageExifMetadata = ({
         const formatState = getFormatState(fullFieldName);
         const expanded = isExpanded(fullFieldName);
         const expandedObject = expanded ? expandValue(value) : null;
+        const isTopLevel = parentFieldName === "";
 
         return (
           <div
@@ -95,6 +96,8 @@ const ImageExifMetadata = ({
                 canFormat={canFormat(value)}
                 formatState={formatState}
                 onToggleFormat={toggleFormat}
+                showFavorite={isTopLevel}
+                showHidden={isTopLevel}
               />
             </div>
             {expanded && expandedObject ? (

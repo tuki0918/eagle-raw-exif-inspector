@@ -67,6 +67,7 @@ const HiddenFieldsSection = ({
             const expanded =
               formatState === "expanded" && expandValue(value) !== null;
             const expandedObject = expanded ? expandValue(value) : null;
+            const isTopLevel = parentFieldName === "";
 
             return (
               <div key={fullFieldName} className="flex flex-col">
@@ -81,6 +82,8 @@ const HiddenFieldsSection = ({
                     canFormat={canFormat(value)}
                     formatState={formatState}
                     onToggleFormat={onToggleFormat}
+                    showFavorite={isTopLevel}
+                    showHidden={isTopLevel}
                   />
                 </div>
                 {expanded && expandedObject ? (
