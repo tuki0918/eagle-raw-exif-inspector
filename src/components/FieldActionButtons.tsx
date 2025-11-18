@@ -1,5 +1,5 @@
 import type { FormatState } from "@/hooks/useJsonFormatter";
-import { Braces, Eye, EyeOff, Star } from "lucide-react";
+import { Braces, ChevronDown, Eye, EyeOff, Star } from "lucide-react";
 
 interface FieldActionButtonsProps {
   fieldName: string;
@@ -30,8 +30,6 @@ const FieldActionButtons = ({
     switch (formatState) {
       case "formatted":
         return "text-blue-500";
-      case "expanded":
-        return "text-green-500 dark:text-green-400";
       default:
         return "text-gray-400 dark:text-gray-500";
     }
@@ -48,6 +46,13 @@ const FieldActionButtons = ({
     }
   };
 
+  const getFormatButtonIcon = () => {
+    if (formatState === "expanded") {
+      return <ChevronDown size={16} />;
+    }
+    return <Braces size={16} />;
+  };
+
   return (
     <div className="flex items-center gap-1 ml-2">
       {canFormat && onToggleFormat && (
@@ -58,7 +63,7 @@ const FieldActionButtons = ({
           title={getFormatButtonTitle()}
           aria-label={getFormatButtonTitle()}
         >
-          <Braces size={16} />
+          {getFormatButtonIcon()}
         </button>
       )}
       {showFavorite && (
