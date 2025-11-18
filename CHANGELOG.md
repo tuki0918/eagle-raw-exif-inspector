@@ -1,3 +1,8 @@
+## [2.2.0] - 2025-11-18
+### Added
+- Added JSON expansion feature to recursively display JSON objects as nested fields
+- Added three-state format toggle (off → formatted → expanded → off)
+
 ## [2.1.0] - 2025-10-19
 ### Added
 - Added WebP format support
