@@ -1,8 +1,8 @@
 import type { FormatState } from "@/hooks/useJsonFormatter";
-import { formatFieldName } from "@/utils/formatFieldName";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import FieldActionButtons from "./FieldActionButtons";
+import FieldNameDisplay from "./FieldNameDisplay";
 import FieldValue from "./FieldValue";
 import ImageExifMetadata from "./ImageExifMetadata";
 
@@ -65,8 +65,6 @@ const HiddenFieldsSection = ({
             const fullFieldName = parentFieldName
               ? `${parentFieldName}.${key}`
               : key;
-            // 表示用のフィールド名（配列の場合は[0]形式）
-            const displayFieldName = formatFieldName(key, parentFieldName);
             const formatState = getFormatState(fullFieldName);
             const expanded =
               formatState === "expanded" && expandValue(value) !== null;
@@ -76,7 +74,11 @@ const HiddenFieldsSection = ({
             return (
               <div key={fullFieldName} className="flex flex-col">
                 <div className="py-3 item-label flex items-center justify-between">
-                  <span>{displayFieldName}</span>
+                  <FieldNameDisplay
+                    fieldKey={key}
+                    parentFieldName={parentFieldName}
+                    isTopLevel={isTopLevel}
+                  />
                   <FieldActionButtons
                     fieldName={fullFieldName}
                     isFavorite={isFavorite(fullFieldName)}

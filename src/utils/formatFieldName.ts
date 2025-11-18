@@ -16,6 +16,17 @@
  * formatFieldName("title", "xxx.0") // "xxx[0].title"
  */
 export const formatFieldName = (key: string, parent: string): string => {
+  return formatFieldNameFull(key, parent);
+};
+
+/**
+ * フィールド名のフルパスを取得する関数
+ *
+ * @param key - フィールドのキー
+ * @param parent - 親フィールド名
+ * @returns フルパス形式のフィールド名
+ */
+export const formatFieldNameFull = (key: string, parent: string): string => {
   // 親フィールド名をフォーマット（数値キーを[0]形式に変換）
   const formatParent = (parentName: string): string => {
     if (!parentName) return "";
@@ -46,4 +57,20 @@ export const formatFieldName = (key: string, parent: string): string => {
     return formattedParent ? `${formattedParent}[${key}]` : `[${key}]`;
   }
   return formattedParent ? `${formattedParent}.${key}` : key;
+};
+
+/**
+ * フィールド名の短縮形式を取得する関数
+ * workflow.seed_widgets -> seed_widgets
+ * workflow.seed_widgets[370] -> [370]
+ *
+ * @param key - フィールドのキー
+ * @returns 短縮形式のフィールド名（末尾のみ）
+ */
+export const formatFieldNameShort = (key: string): string => {
+  // 数値のキー（配列インデックス）の場合は[0]形式で表示
+  if (/^\d+$/.test(key)) {
+    return `[${key}]`;
+  }
+  return key;
 };
