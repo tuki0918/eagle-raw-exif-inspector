@@ -54,6 +54,13 @@ export const useJsonFormatter = () => {
       (Array.isArray(value) ||
         (typeof value === "object" && value.constructor === Object))
     ) {
+      // 空の配列または空のオブジェクトの場合はフォーマット対象外
+      if (Array.isArray(value)) {
+        return value.length > 0;
+      }
+      if (typeof value === "object" && value.constructor === Object) {
+        return Object.keys(value).length > 0;
+      }
       return true;
     }
 
@@ -61,12 +68,22 @@ export const useJsonFormatter = () => {
     if (typeof value === "string") {
       try {
         const parsed = JSON.parse(value);
-        return (
+        if (
           typeof parsed === "object" &&
           parsed !== null &&
           (Array.isArray(parsed) ||
             (typeof parsed === "object" && parsed.constructor === Object))
-        );
+        ) {
+          // 空の配列または空のオブジェクトの場合はフォーマット対象外
+          if (Array.isArray(parsed)) {
+            return parsed.length > 0;
+          }
+          if (typeof parsed === "object" && parsed.constructor === Object) {
+            return Object.keys(parsed).length > 0;
+          }
+          return true;
+        }
+        return false;
       } catch {
         return false;
       }
@@ -115,21 +132,35 @@ export const useJsonFormatter = () => {
     return value;
   };
 
-  // JSONオブジェクトを展開可能な形式に変換するヘルパー関数
+  // JSONオブジェクトまたは配列を展開可能な形式に変換するヘルパー関数
   const expandValue = (value: unknown): Record<string, unknown> | null => {
+    // オブジェクトの場合
     if (typeof value === "object" && value !== null && !Array.isArray(value)) {
       return value as Record<string, unknown>;
+    }
+
+    // 配列の場合、インデックスをキーとしたオブジェクトに変換
+    if (Array.isArray(value)) {
+      const result: Record<string, unknown> = {};
+      value.forEach((item, index) => {
+        result[String(index)] = item;
+      });
+      return result;
     }
 
     // 文字列の場合はJSONとして解析を試みる
     if (typeof value === "string") {
       try {
         const parsed = JSON.parse(value);
-        if (
-          typeof parsed === "object" &&
-          parsed !== null &&
-          !Array.isArray(parsed)
-        ) {
+        if (Array.isArray(parsed)) {
+          // 配列の場合、インデックスをキーとしたオブジェクトに変換
+          const result: Record<string, unknown> = {};
+          parsed.forEach((item, index) => {
+            result[String(index)] = item;
+          });
+          return result;
+        }
+        if (typeof parsed === "object" && parsed !== null) {
           return parsed as Record<string, unknown>;
         }
       } catch {

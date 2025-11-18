@@ -1,4 +1,5 @@
 import type { FormatState } from "@/hooks/useJsonFormatter";
+import { formatFieldName } from "@/utils/formatFieldName";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import FieldActionButtons from "./FieldActionButtons";
@@ -60,9 +61,12 @@ const HiddenFieldsSection = ({
       {isExpanded && (
         <div className="mt-2">
           {hiddenEntries.map(([key, value]) => {
+            // 内部的なフィールド名（ドット区切り）
             const fullFieldName = parentFieldName
               ? `${parentFieldName}.${key}`
               : key;
+            // 表示用のフィールド名（配列の場合は[0]形式）
+            const displayFieldName = formatFieldName(key, parentFieldName);
             const formatState = getFormatState(fullFieldName);
             const expanded =
               formatState === "expanded" && expandValue(value) !== null;
@@ -72,7 +76,7 @@ const HiddenFieldsSection = ({
             return (
               <div key={fullFieldName} className="flex flex-col">
                 <div className="py-3 item-label flex items-center justify-between">
-                  <span>{fullFieldName}</span>
+                  <span>{displayFieldName}</span>
                   <FieldActionButtons
                     fieldName={fullFieldName}
                     isFavorite={isFavorite(fullFieldName)}

@@ -1,5 +1,6 @@
 import { useExifFieldPreferences } from "@/hooks/useExifFieldPreferences";
 import { useJsonFormatter } from "@/hooks/useJsonFormatter";
+import { formatFieldName } from "@/utils/formatFieldName";
 import FieldActionButtons from "./FieldActionButtons";
 import FieldValue from "./FieldValue";
 import HiddenFieldsSection from "./HiddenFieldsSection";
@@ -72,9 +73,12 @@ const ImageExifMetadata = ({
         const shouldAddMarginBottom =
           isLastVisibleEntry && hasVisibleEntries && hasHiddenEntries;
 
+        // 内部的なフィールド名（ドット区切り）
         const fullFieldName = parentFieldName
           ? `${parentFieldName}.${key}`
           : key;
+        // 表示用のフィールド名（配列の場合は[0]形式）
+        const displayFieldName = formatFieldName(key, parentFieldName);
         const formatState = getFormatState(fullFieldName);
         const expanded = isExpanded(fullFieldName);
         const expandedObject = expanded ? expandValue(value) : null;
@@ -86,7 +90,7 @@ const ImageExifMetadata = ({
             className={`flex flex-col${shouldAddMarginBottom ? " mb-4" : ""}`}
           >
             <div className="py-3 item-label flex items-center justify-between">
-              <span>{fullFieldName}</span>
+              <span>{displayFieldName}</span>
               <FieldActionButtons
                 fieldName={fullFieldName}
                 isFavorite={isFavorite(fullFieldName)}
