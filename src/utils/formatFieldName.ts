@@ -28,11 +28,8 @@ export const formatFieldName = (key: string, parent: string): string => {
       if (/^\d+$/.test(part)) {
         formattedParts.push(`[${part}]`);
       } else {
-        // 通常のキーの場合、前の部分が数値でない場合はドットで結合
-        if (
-          formattedParts.length > 0 &&
-          !formattedParts[formattedParts.length - 1]?.endsWith("]")
-        ) {
+        // 通常のキーの場合、前の要素が存在する場合はドットで結合
+        if (formattedParts.length > 0) {
           formattedParts.push(".");
         }
         formattedParts.push(part);
