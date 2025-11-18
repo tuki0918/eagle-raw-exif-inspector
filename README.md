@@ -1,6 +1,6 @@
 # [Eagle] RAW EXIF Metadata
 
-![Version 2.2.1](https://img.shields.io/badge/version-2.2.1-blue.svg)
+![Version 2.2.2](https://img.shields.io/badge/version-2.2.2-blue.svg)
 
 ![](docs/sample1.png)
 
