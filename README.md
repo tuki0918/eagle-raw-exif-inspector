@@ -15,6 +15,7 @@ A quick EXIF viewer plugin for PNG, JPEG, and WebP images with the following fea
 <details>
 <summary>Also supports images from:</summary>
 
+- `ComfyUI Workflows`
 - `Stable Diffusion`
 - `NovelAI`
 - `Midjourney`
