@@ -56,3 +56,13 @@ export const NotFound: Story = {
     item: null,
   },
 };
+
+export const WithUrl: Story = {
+  args: {
+    item: {
+      ...(meta.args?.item as object),
+      Website: "https://example.com",
+      Portfolio: "http://portfolio.example.com",
+    },
+  },
+};
