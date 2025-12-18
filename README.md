@@ -1,8 +1,8 @@
 # [Eagle] RAW EXIF Metadata
 
-![Version](https://img.shields.io/badge/last%20release-v2.2.2-blue)
-![Version](https://img.shields.io/badge/dynamic/json?url=https://community-en.eagle.cool/api/plugin/1152a2b2-499f-4d4e-afd2-2554fe44808a?locale=en&query=$.data.lasteVersion.version&label=store&prefix=v&color=blue)
-![Downloads](https://img.shields.io/badge/dynamic/json?url=https://community-en.eagle.cool/api/plugin/1152a2b2-499f-4d4e-afd2-2554fe44808a?locale=en&query=$.data.downloads&label=downloads&color=blue)
+[![Version](https://img.shields.io/badge/last%20release-v2.2.2-blue)](https://github.com/tuki0918/eagle-raw-exif-inspector/releases/tag/v2.2.2)
+[![Version](https://img.shields.io/badge/dynamic/json?url=https://community-en.eagle.cool/api/plugin/1152a2b2-499f-4d4e-afd2-2554fe44808a?locale=en&query=$.data.lasteVersion.version&label=store&prefix=v&color=blue)](https://community-en.eagle.cool/plugin/1152a2b2-499f-4d4e-afd2-2554fe44808a)
+[![Downloads](https://img.shields.io/badge/dynamic/json?url=https://community-en.eagle.cool/api/plugin/1152a2b2-499f-4d4e-afd2-2554fe44808a?locale=en&query=$.data.downloads&label=downloads&color=blue)](https://community-en.eagle.cool/plugin/1152a2b2-499f-4d4e-afd2-2554fe44808a)
 
 
 ![](docs/sample1.png)
