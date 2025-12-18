@@ -1,6 +1,9 @@
 # [Eagle] RAW EXIF Metadata
 
-![Version 2.2.2](https://img.shields.io/badge/version-2.2.2-blue.svg)
+![Version](https://img.shields.io/badge/last%20release-v2.2.2-blue)
+![Version](https://img.shields.io/badge/dynamic/json?url=https://community-en.eagle.cool/api/plugin/1152a2b2-499f-4d4e-afd2-2554fe44808a?locale=en&query=$.data.lasteVersion.version&label=store&prefix=v&color=blue)
+![Downloads](https://img.shields.io/badge/dynamic/json?url=https://community-en.eagle.cool/api/plugin/1152a2b2-499f-4d4e-afd2-2554fe44808a?locale=en&query=$.data.downloads&label=downloads&color=blue)
+
 
 ![](docs/sample1.png)
 
