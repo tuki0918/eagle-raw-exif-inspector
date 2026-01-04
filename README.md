@@ -7,6 +7,8 @@
 
 ![](docs/sample1.png)
 
+[Eagle](https://eagle.sjv.io/RGANON)
+
 ## Features
 
 A quick EXIF viewer plugin for PNG, JPEG, and WebP images with the following features:
