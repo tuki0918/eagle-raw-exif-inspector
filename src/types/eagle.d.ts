@@ -3,6 +3,7 @@ declare const eagle: {
   onThemeChanged: (callback: (theme: string) => void) => void;
   app: {
     theme: string;
+    isDarkColors: () => boolean;
   };
   item: {
     getSelected: () => Promise<unknown[]>;
