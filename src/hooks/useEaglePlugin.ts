@@ -8,6 +8,13 @@ export function useEaglePlugin() {
 
   useEffect(() => {
     const handleThemeChange = (theme: unknown) => {
+
+      // if theme is "Auto", determine based on isDarkColors
+      if (theme === "Auto") {
+        setTheme(eagle.app.isDarkColors() ? "GRAY" : "LIGHT");
+        return;
+      }
+
       setTheme(theme as EagleTheme);
     };
 
