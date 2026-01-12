@@ -13,7 +13,7 @@ if (typeof globalThis !== "undefined") {
     globalThis.eagle = {
       onPluginCreate: () => {},
       onThemeChanged: () => {},
-      app: { theme: "LIGHT" },
+      app: { theme: "LIGHT", isDarkColors: () => false },
       item: { getSelected: async () => [] },
     };
   }
