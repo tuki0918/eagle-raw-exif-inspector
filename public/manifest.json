@@ -8,7 +8,7 @@
   "languages": ["en", "ja_JP"],
   "logo": "logo.png",
   "keywords": ["exif", "stable diffusion", "metadata"],
-  "devTools": true,
+  "devTools": false,
   "preview": {
     "jpg,png,webp": {
       "inspector": {
