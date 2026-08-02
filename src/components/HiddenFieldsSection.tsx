@@ -51,7 +51,7 @@ const HiddenFieldsSection = ({
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex items-center gap-2 py-2 px-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-400 text-sm w-full"
+        className="flex items-center gap-2 py-2 px-2 rounded hover:bg-black/5 dark:hover:bg-black/15 transition-colors text-gray-600 dark:text-gray-400 text-sm w-full"
         aria-expanded={isExpanded}
       >
         {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
