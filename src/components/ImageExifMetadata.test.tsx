@@ -1,5 +1,5 @@
 import ImageExifMetadata from "@/components/ImageExifMetadata";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 
 // Mock localStorage
 const localStorageMock = {
@@ -64,5 +64,44 @@ describe("ImageExifMetadata", () => {
   it("renders not found message when item is null", () => {
     render(<ImageExifMetadata item={null} />);
     expect(screen.getByText("message.notFound")).toBeInTheDocument();
+  });
+
+  it("separates visible and hidden fields into counted tabs", async () => {
+    localStorageMock.getItem.mockReturnValue(
+      JSON.stringify({ favorites: [], hidden: ["HiddenField"] }),
+    );
+
+    render(
+      <ImageExifMetadata
+        item={{ VisibleField: "visible", HiddenField: "hidden" }}
+      />,
+    );
+
+    const visibleTab = await screen.findByRole("tab", {
+      name: "message.visibleFields (1)",
+    });
+    const hiddenTab = screen.getByRole("tab", {
+      name: "message.hiddenFields (1)",
+    });
+
+    expect(visibleTab).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("VisibleField")).toBeInTheDocument();
+    expect(screen.queryByText("HiddenField")).not.toBeInTheDocument();
+
+    fireEvent.click(hiddenTab);
+
+    expect(hiddenTab).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("HiddenField")).toBeInTheDocument();
+    expect(screen.queryByText("VisibleField")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "message.showField" }));
+
+    expect(
+      await screen.findByRole("tab", { name: "message.visibleFields (2)" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("tab", { name: "message.hiddenFields (0)" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("message.noHiddenFields")).toBeInTheDocument();
   });
 });
