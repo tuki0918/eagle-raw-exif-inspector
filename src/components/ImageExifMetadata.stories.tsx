@@ -1,5 +1,5 @@
 import ImageExifMetadata from "@/components/ImageExifMetadata";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Decorator, Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof ImageExifMetadata> = {
   title: "Components/ImageExifMetadata",
@@ -49,9 +49,7 @@ const readmeDemoItem = {
   DateTimeOriginal: "2025:06:15 18:42:10",
 };
 
-const withReadmeDemoState: NonNullable<Story["decorators"]>[number] = (
-  Story,
-) => {
+const withReadmeDemoState: Decorator = (Story) => {
   localStorage.setItem(
     "exif-field-preferences",
     JSON.stringify({
