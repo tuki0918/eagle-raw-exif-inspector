@@ -31,7 +31,69 @@ export default meta;
 
 type Story = StoryObj<typeof ImageExifMetadata>;
 
+const readmeDemoItem = {
+  Make: "Northstar Camera Co.",
+  Model: "Aurora X2",
+  ExposureTime: "1/125",
+  FNumber: 2.8,
+  ISOSpeedRatings: 200,
+  MakerNote: {
+    DriveMode: "Single",
+    FocusMode: "AF-S",
+    WhiteBalance: "Auto",
+    MeteringMode: "Multi-segment",
+    ImageStabilization: "On",
+    ShutterCount: 1842,
+  },
+  LensModel: "NS 35mm F1.8",
+  DateTimeOriginal: "2025:06:15 18:42:10",
+};
+
+const withReadmeDemoState: NonNullable<Story["decorators"]>[number] = (
+  Story,
+) => {
+  localStorage.setItem(
+    "exif-field-preferences",
+    JSON.stringify({
+      favorites: ["Make"],
+      hidden: ["LensModel", "DateTimeOriginal"],
+    }),
+  );
+  localStorage.setItem(
+    "exif-display-settings",
+    JSON.stringify({
+      version: 1,
+      settings: {
+        autoFormatJson: true,
+        collapseLongValues: true,
+        favoritesFirst: true,
+        showFullFieldPaths: false,
+        includeFieldNameInCopy: false,
+      },
+    }),
+  );
+
+  return <Story />;
+};
+
+const readmeDemoStory: Story = {
+  args: { item: readmeDemoItem },
+  decorators: [withReadmeDemoState],
+};
+
 export const Default: Story = {};
+
+export const ReadmeLight: Story = {
+  ...readmeDemoStory,
+  globals: { theme: "LIGHT" },
+};
+ReadmeLight.storyName = "README - Light";
+
+export const ReadmeDark: Story = {
+  ...readmeDemoStory,
+  globals: { theme: "DARK" },
+};
+ReadmeDark.storyName = "README - Dark";
 
 export const Light: Story = { ...Default, globals: { theme: "LIGHT" } };
 Light.storyName = "Theme - Light";
