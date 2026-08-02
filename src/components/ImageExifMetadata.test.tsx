@@ -1,5 +1,5 @@
 import ImageExifMetadata from "@/components/ImageExifMetadata";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 // Mock localStorage
 const localStorageMock = {
@@ -9,9 +9,16 @@ const localStorageMock = {
   clear: vi.fn(),
 };
 
+const clipboardWriteText = vi.fn();
+
 Object.defineProperty(window, "localStorage", {
   value: localStorageMock,
   writable: true,
+});
+
+Object.defineProperty(navigator, "clipboard", {
+  value: { writeText: clipboardWriteText },
+  configurable: true,
 });
 
 describe("ImageExifMetadata", () => {
@@ -20,8 +27,11 @@ describe("ImageExifMetadata", () => {
   });
 
   beforeEach(() => {
+    localStorageMock.getItem.mockReset();
     localStorageMock.getItem.mockReturnValue(null);
-    localStorageMock.setItem.mockClear();
+    localStorageMock.setItem.mockReset();
+    clipboardWriteText.mockReset();
+    clipboardWriteText.mockResolvedValue(undefined);
   });
 
   afterAll(() => {
@@ -52,9 +62,21 @@ describe("ImageExifMetadata", () => {
     // expect(screen.getByText("__DATE__")).toBeInTheDocument();
     // expect(screen.getByText("...")).toBeInTheDocument();
     expect(screen.getByText("__ARRAY__")).toBeInTheDocument();
-    expect(screen.getByText("[1,2,3]")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        (_, element) =>
+          element?.tagName === "PRE" &&
+          element.textContent === JSON.stringify([1, 2, 3], null, 2),
+      ),
+    ).toBeInTheDocument();
     expect(screen.getByText("__OBJECT__")).toBeInTheDocument();
-    expect(screen.getByText('{"one":1,"two":2}')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        (_, element) =>
+          element?.tagName === "PRE" &&
+          element.textContent === JSON.stringify({ one: 1, two: 2 }, null, 2),
+      ),
+    ).toBeInTheDocument();
     expect(screen.getByText("__NULL__")).toBeInTheDocument();
     expect(screen.getByText("null")).toBeInTheDocument();
     expect(screen.getByText("_UNDEFINED_")).toBeInTheDocument();
@@ -67,8 +89,10 @@ describe("ImageExifMetadata", () => {
   });
 
   it("separates visible and hidden fields into counted tabs", async () => {
-    localStorageMock.getItem.mockReturnValue(
-      JSON.stringify({ favorites: [], hidden: ["HiddenField"] }),
+    localStorageMock.getItem.mockImplementation((key: string) =>
+      key === "exif-field-preferences"
+        ? JSON.stringify({ favorites: [], hidden: ["HiddenField"] })
+        : null,
     );
 
     render(
@@ -103,5 +127,122 @@ describe("ImageExifMetadata", () => {
       screen.getByRole("tab", { name: "message.hiddenFields (0)" }),
     ).toBeInTheDocument();
     expect(screen.getByText("message.noHiddenFields")).toBeInTheDocument();
+  });
+
+  it("copies only the field value by default", async () => {
+    render(<ImageExifMetadata item={{ Model: "XYZ" }} />);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "message.copyFieldValue: Model" }),
+    );
+
+    await waitFor(() => expect(clipboardWriteText).toHaveBeenCalledWith("XYZ"));
+  });
+
+  it("includes the field name when the copy setting is enabled", async () => {
+    localStorageMock.getItem.mockImplementation((key: string) =>
+      key === "exif-display-settings"
+        ? JSON.stringify({
+            version: 1,
+            settings: { includeFieldNameInCopy: true },
+          })
+        : null,
+    );
+
+    render(<ImageExifMetadata item={{ Model: "XYZ" }} />);
+    fireEvent.click(
+      screen.getByRole("button", { name: "message.copyFieldValue: Model" }),
+    );
+
+    await waitFor(() =>
+      expect(clipboardWriteText).toHaveBeenCalledWith("Model: XYZ"),
+    );
+  });
+
+  it("shows display settings in the content area and persists changes", () => {
+    render(<ImageExifMetadata item={{ Model: "XYZ" }} />);
+
+    fireEvent.click(
+      screen.getByRole("tab", { name: "message.displaySettings" }),
+    );
+    expect(screen.queryByText("XYZ")).not.toBeInTheDocument();
+    const includeNameSwitch = screen.getByRole("switch", {
+      name: "message.includeFieldNameInCopy",
+    });
+
+    expect(
+      screen.getByRole("switch", { name: "message.autoFormatJson" }),
+    ).toHaveAttribute("aria-checked", "true");
+    expect(
+      screen.getByRole("switch", { name: "message.collapseLongValues" }),
+    ).toHaveAttribute("aria-checked", "true");
+    expect(
+      screen.getByRole("switch", { name: "message.favoritesFirst" }),
+    ).toHaveAttribute("aria-checked", "true");
+    expect(
+      screen.getByRole("switch", { name: "message.showFullFieldPaths" }),
+    ).toHaveAttribute("aria-checked", "false");
+    expect(includeNameSwitch).toHaveAttribute("aria-checked", "false");
+    fireEvent.click(includeNameSwitch);
+    expect(includeNameSwitch).toHaveAttribute("aria-checked", "true");
+    expect(localStorageMock.setItem).toHaveBeenCalledWith(
+      "exif-display-settings",
+      expect.stringContaining('"includeFieldNameInCopy":true'),
+    );
+  });
+
+  it("uses the full path for nested fields when enabled", () => {
+    localStorageMock.getItem.mockImplementation((key: string) =>
+      key === "exif-display-settings"
+        ? JSON.stringify({
+            version: 1,
+            settings: { showFullFieldPaths: true },
+          })
+        : null,
+    );
+
+    render(<ImageExifMetadata item={{ Parameters: { seed: 123 } }} />);
+    fireEvent.click(screen.getByRole("button", { name: "message.expandJson" }));
+
+    expect(screen.getByText("Parameters.seed")).toBeInTheDocument();
+  });
+
+  it("keeps the source field order when favorites-first is disabled", () => {
+    localStorageMock.getItem.mockImplementation((key: string) => {
+      if (key === "exif-field-preferences") {
+        return JSON.stringify({ favorites: ["Second"], hidden: [] });
+      }
+      if (key === "exif-display-settings") {
+        return JSON.stringify({
+          version: 1,
+          settings: { favoritesFirst: false },
+        });
+      }
+      return null;
+    });
+
+    render(<ImageExifMetadata item={{ First: 1, Second: 2 }} />);
+    const firstField = screen.getByText("First");
+    const secondField = screen.getByText("Second");
+
+    expect(
+      firstField.compareDocumentPosition(secondField) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it("keeps JSON compact when automatic formatting is disabled", () => {
+    localStorageMock.getItem.mockImplementation((key: string) =>
+      key === "exif-display-settings"
+        ? JSON.stringify({
+            version: 1,
+            settings: { autoFormatJson: false },
+          })
+        : null,
+    );
+
+    render(<ImageExifMetadata item={{ Parameters: { seed: 123 } }} />);
+
+    expect(screen.getByText('{"seed":123}')).toBeInTheDocument();
   });
 });

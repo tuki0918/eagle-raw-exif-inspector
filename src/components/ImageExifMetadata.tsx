@@ -1,5 +1,12 @@
+import {
+  type ExifDisplaySettingKey,
+  type ExifDisplaySettings,
+  useExifDisplaySettings,
+} from "@/hooks/useExifDisplaySettings";
 import { useExifFieldPreferences } from "@/hooks/useExifFieldPreferences";
 import { useJsonFormatter } from "@/hooks/useJsonFormatter";
+import { formatFieldName, formatFieldNameShort } from "@/utils/formatFieldName";
+import { renderValue } from "@/utils/renderValue";
 import { useState } from "react";
 import FieldActionButtons from "./FieldActionButtons";
 import FieldNameDisplay from "./FieldNameDisplay";
@@ -7,19 +14,33 @@ import FieldValue from "./FieldValue";
 import FieldVisibilityTabs, {
   type FieldVisibilityTab,
 } from "./FieldVisibilityTabs";
+import MetadataSettings from "./MetadataSettings";
 
-const ImageExifMetadata = ({
-  item,
-  parentFieldName = "",
-}: {
-  item: {
-    [key: string]: unknown;
-  } | null;
+interface ImageExifMetadataProps {
+  item: Record<string, unknown> | null;
   parentFieldName?: string;
-}) => {
+}
+
+interface MetadataLevelProps {
+  item: Record<string, unknown>;
+  parentFieldName: string;
+  fieldPreferences: ReturnType<typeof useExifFieldPreferences>;
+  formatter: ReturnType<typeof useJsonFormatter>;
+  settings: ExifDisplaySettings;
+  onSettingChange: (key: ExifDisplaySettingKey, value: boolean) => void;
+}
+
+const MetadataLevel = ({
+  item,
+  parentFieldName,
+  fieldPreferences,
+  formatter,
+  settings,
+  onSettingChange,
+}: MetadataLevelProps) => {
   const [activeTab, setActiveTab] = useState<FieldVisibilityTab>("visible");
   const { preferences, toggleFavorite, toggleHidden, isFavorite, isHidden } =
-    useExifFieldPreferences();
+    fieldPreferences;
   const {
     getFormatState,
     isExpanded,
@@ -27,63 +48,75 @@ const ImageExifMetadata = ({
     canFormat,
     formatValue,
     expandValue,
-  } = useJsonFormatter();
-
-  if (item == null) {
-    return (
-      <div className="py-3 px-4 info-message rounded-md text-center">
-        {i18next.t("message.notFound")}
-      </div>
-    );
-  }
-
+  } = formatter;
   const allEntries = Object.entries(item);
+  const isTopLevel = parentFieldName === "";
 
-  // Sort entries: favorites first (in order added), then regular, then hidden separately
-  const favoriteEntries = allEntries.filter(([key]) => {
-    const fullFieldName = parentFieldName ? `${parentFieldName}.${key}` : key;
-    return isFavorite(fullFieldName);
-  });
-  const regularEntries = allEntries.filter(([key]) => {
-    const fullFieldName = parentFieldName ? `${parentFieldName}.${key}` : key;
-    return !isFavorite(fullFieldName) && !isHidden(fullFieldName);
-  });
   const hiddenEntries = allEntries.filter(([key]) => {
     const fullFieldName = parentFieldName ? `${parentFieldName}.${key}` : key;
     return isHidden(fullFieldName);
   });
 
-  // Sort favorites by their order in preferences.favorites array
-  const sortedFavoriteEntries = favoriteEntries.sort(([keyA], [keyB]) => {
-    const fullFieldNameA = parentFieldName
-      ? `${parentFieldName}.${keyA}`
-      : keyA;
-    const fullFieldNameB = parentFieldName
-      ? `${parentFieldName}.${keyB}`
-      : keyB;
-    const indexA = preferences.favorites.indexOf(fullFieldNameA);
-    const indexB = preferences.favorites.indexOf(fullFieldNameB);
-    return indexA - indexB;
-  });
-
-  const visibleEntries = [...sortedFavoriteEntries, ...regularEntries];
-  const isTopLevel = parentFieldName === "";
+  let visibleEntries: [string, unknown][];
+  if (settings.favoritesFirst) {
+    const favoriteEntries = allEntries
+      .filter(([key]) => {
+        const fullFieldName = parentFieldName
+          ? `${parentFieldName}.${key}`
+          : key;
+        return isFavorite(fullFieldName);
+      })
+      .sort(([keyA], [keyB]) => {
+        const fullFieldNameA = parentFieldName
+          ? `${parentFieldName}.${keyA}`
+          : keyA;
+        const fullFieldNameB = parentFieldName
+          ? `${parentFieldName}.${keyB}`
+          : keyB;
+        return (
+          preferences.favorites.indexOf(fullFieldNameA) -
+          preferences.favorites.indexOf(fullFieldNameB)
+        );
+      });
+    const regularEntries = allEntries.filter(([key]) => {
+      const fullFieldName = parentFieldName ? `${parentFieldName}.${key}` : key;
+      return !isFavorite(fullFieldName) && !isHidden(fullFieldName);
+    });
+    visibleEntries = [...favoriteEntries, ...regularEntries];
+  } else {
+    visibleEntries = allEntries.filter(([key]) => {
+      const fullFieldName = parentFieldName ? `${parentFieldName}.${key}` : key;
+      return !isHidden(fullFieldName);
+    });
+  }
 
   const renderEntries = (entries: [string, unknown][]) =>
     entries.map(([key, value]) => {
-      // 内部的なフィールド名（ドット区切り）
       const fullFieldName = parentFieldName ? `${parentFieldName}.${key}` : key;
       const formatState = getFormatState(fullFieldName);
       const expanded = isExpanded(fullFieldName);
       const expandedObject = expanded ? expandValue(value) : null;
+      const displayFieldName =
+        isTopLevel || settings.showFullFieldPaths
+          ? formatFieldName(key, parentFieldName)
+          : formatFieldNameShort(key);
+
+      const copyValue = async () => {
+        const renderedValue = renderValue(formatValue(value, fullFieldName));
+        const text = settings.includeFieldNameInCopy
+          ? `${displayFieldName}: ${renderedValue}`
+          : renderedValue;
+        await navigator.clipboard.writeText(text);
+      };
 
       return (
         <div key={fullFieldName} className="flex flex-col">
-          <div className="py-3 item-label flex items-center justify-between">
+          <div className="item-label flex items-center justify-between py-3">
             <FieldNameDisplay
               fieldKey={key}
               parentFieldName={parentFieldName}
               isTopLevel={isTopLevel}
+              showFullPath={settings.showFullFieldPaths}
             />
             <FieldActionButtons
               fieldName={fullFieldName}
@@ -96,13 +129,19 @@ const ImageExifMetadata = ({
               onToggleFormat={toggleFormat}
               showFavorite={isTopLevel}
               showHidden={isTopLevel}
+              onCopy={copyValue}
+              fieldDisplayName={displayFieldName}
             />
           </div>
           {expanded && expandedObject ? (
-            <div className="ml-4 border-l-2 border-gray-300 dark:border-gray-600 pl-4">
-              <ImageExifMetadata
+            <div className="ml-4 border-l-2 border-gray-300 pl-4 dark:border-gray-600">
+              <MetadataLevel
                 item={expandedObject}
                 parentFieldName={fullFieldName}
+                fieldPreferences={fieldPreferences}
+                formatter={formatter}
+                settings={settings}
+                onSettingChange={onSettingChange}
               />
             </div>
           ) : (
@@ -110,6 +149,7 @@ const ImageExifMetadata = ({
               fieldName={fullFieldName}
               value={value}
               formatValue={formatValue}
+              collapseLongValues={settings.collapseLongValues}
             />
           )}
         </div>
@@ -140,15 +180,45 @@ const ImageExifMetadata = ({
         role="tabpanel"
         aria-labelledby={`${activeTab}-fields-tab`}
       >
-        {activeEntries.length > 0 ? (
+        {activeTab === "settings" ? (
+          <MetadataSettings settings={settings} onChange={onSettingChange} />
+        ) : activeEntries.length > 0 ? (
           renderEntries(activeEntries)
         ) : (
-          <div className="py-3 px-4 info-message rounded-md text-center">
+          <div className="info-message rounded-md px-4 py-3 text-center">
             {i18next.t(emptyMessageKey)}
           </div>
         )}
       </div>
     </>
+  );
+};
+
+const ImageExifMetadata = ({
+  item,
+  parentFieldName = "",
+}: ImageExifMetadataProps) => {
+  const fieldPreferences = useExifFieldPreferences();
+  const { settings, updateSetting } = useExifDisplaySettings();
+  const formatter = useJsonFormatter(settings.autoFormatJson);
+
+  if (item == null) {
+    return (
+      <div className="info-message rounded-md px-4 py-3 text-center">
+        {i18next.t("message.notFound")}
+      </div>
+    );
+  }
+
+  return (
+    <MetadataLevel
+      item={item}
+      parentFieldName={parentFieldName}
+      fieldPreferences={fieldPreferences}
+      formatter={formatter}
+      settings={settings}
+      onSettingChange={updateSetting}
+    />
   );
 };
 

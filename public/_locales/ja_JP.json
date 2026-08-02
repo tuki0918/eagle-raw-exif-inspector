@@ -22,6 +22,15 @@
     "hiddenFieldPlural": "hidden fields",
     "formatJson": "JSONを整形",
     "expandJson": "JSONを展開",
-    "unformatJson": "整形を解除"
+    "unformatJson": "整形を解除",
+    "displaySettings": "設定",
+    "autoFormatJson": "JSONを自動整形",
+    "collapseLongValues": "長い値を折りたたむ",
+    "favoritesFirst": "お気に入りを先頭に表示",
+    "showFullFieldPaths": "ネスト項目をフルパス表示",
+    "includeFieldNameInCopy": "コピー時に項目名も含める",
+    "copyFieldValue": "項目の値をコピー",
+    "showMore": "もっと見る",
+    "showLess": "折りたたむ"
   }
 }

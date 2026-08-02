@@ -2,13 +2,15 @@ import { useState } from "react";
 
 export type FormatState = "none" | "formatted" | "expanded";
 
-export const useJsonFormatter = () => {
+export const useJsonFormatter = (autoFormatJson = false) => {
   const [formatStates, setFormatStates] = useState<Map<string, FormatState>>(
     new Map(),
   );
 
+  const defaultFormatState: FormatState = autoFormatJson ? "formatted" : "none";
+
   const getFormatState = (fieldName: string): FormatState => {
-    return formatStates.get(fieldName) ?? "none";
+    return formatStates.get(fieldName) ?? defaultFormatState;
   };
 
   const isFormatted = (fieldName: string): boolean => {
@@ -23,7 +25,7 @@ export const useJsonFormatter = () => {
   const toggleFormat = (fieldName: string): void => {
     setFormatStates((prev) => {
       const newMap = new Map(prev);
-      const currentState = newMap.get(fieldName) ?? "none";
+      const currentState = newMap.get(fieldName) ?? defaultFormatState;
 
       // 3状態を循環: none → formatted → expanded → none
       let nextState: FormatState;
@@ -35,7 +37,7 @@ export const useJsonFormatter = () => {
         nextState = "none";
       }
 
-      if (nextState === "none") {
+      if (nextState === defaultFormatState) {
         newMap.delete(fieldName);
       } else {
         newMap.set(fieldName, nextState);

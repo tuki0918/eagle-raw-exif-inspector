@@ -22,6 +22,15 @@
     "hiddenFieldPlural": "hidden fields",
     "formatJson": "Pretty print JSON",
     "expandJson": "Expand JSON",
-    "unformatJson": "Compact JSON"
+    "unformatJson": "Compact JSON",
+    "displaySettings": "Settings",
+    "autoFormatJson": "Format JSON automatically",
+    "collapseLongValues": "Collapse long values",
+    "favoritesFirst": "Show favorites first",
+    "showFullFieldPaths": "Show full paths for nested fields",
+    "includeFieldNameInCopy": "Include field name when copying",
+    "copyFieldValue": "Copy field value",
+    "showMore": "Show more",
+    "showLess": "Show less"
   }
 }

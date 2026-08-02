@@ -5,6 +5,7 @@ interface FieldNameDisplayProps {
   fieldKey: string;
   parentFieldName: string;
   isTopLevel: boolean;
+  showFullPath?: boolean;
 }
 
 /**
@@ -16,6 +17,7 @@ const FieldNameDisplay = ({
   fieldKey,
   parentFieldName,
   isTopLevel,
+  showFullPath = false,
 }: FieldNameDisplayProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -26,7 +28,7 @@ const FieldNameDisplay = ({
     setIsExpanded((prev) => !prev);
   };
 
-  if (isTopLevel) {
+  if (isTopLevel || showFullPath) {
     return <span>{displayFieldName}</span>;
   }
 

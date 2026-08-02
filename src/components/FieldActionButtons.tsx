@@ -1,5 +1,14 @@
 import type { FormatState } from "@/hooks/useJsonFormatter";
-import { Braces, ChevronDown, Eye, EyeOff, Star } from "lucide-react";
+import {
+  Braces,
+  Check,
+  ChevronDown,
+  Copy,
+  Eye,
+  EyeOff,
+  Star,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 interface FieldActionButtonsProps {
   fieldName: string;
@@ -12,6 +21,8 @@ interface FieldActionButtonsProps {
   onToggleFormat?: (fieldName: string) => void;
   showFavorite?: boolean;
   showHidden?: boolean;
+  onCopy: () => Promise<void>;
+  fieldDisplayName: string;
 }
 
 const FieldActionButtons = ({
@@ -25,7 +36,32 @@ const FieldActionButtons = ({
   onToggleFormat,
   showFavorite = true,
   showHidden = true,
+  onCopy,
+  fieldDisplayName,
 }: FieldActionButtonsProps) => {
+  const [copied, setCopied] = useState(false);
+  const copiedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (copiedTimer.current) clearTimeout(copiedTimer.current);
+    },
+    [],
+  );
+
+  const handleCopy = async () => {
+    try {
+      await onCopy();
+      setCopied(true);
+      if (copiedTimer.current) clearTimeout(copiedTimer.current);
+      copiedTimer.current = setTimeout(() => setCopied(false), 1000);
+    } catch {
+      alert(i18next.t("message.copyFailed"));
+    }
+  };
+
+  const copyButtonLabel = `${i18next.t("message.copyFieldValue")}: ${fieldDisplayName}`;
+
   const getFormatButtonColor = () => {
     switch (formatState) {
       case "formatted":
@@ -55,6 +91,17 @@ const FieldActionButtons = ({
 
   return (
     <div className="flex items-center gap-1 ml-2">
+      <button
+        type="button"
+        onClick={handleCopy}
+        className={`rounded p-1 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 ${
+          copied ? "text-green-500" : "text-gray-400 dark:text-gray-500"
+        }`}
+        title={copied ? i18next.t("message.copied") : copyButtonLabel}
+        aria-label={copied ? i18next.t("message.copied") : copyButtonLabel}
+      >
+        {copied ? <Check size={16} /> : <Copy size={16} />}
+      </button>
       {canFormat && onToggleFormat && (
         <button
           type="button"
