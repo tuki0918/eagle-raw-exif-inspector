@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 
 export interface ExifDisplaySettings {
   autoFormatJson: boolean;
+  autoSaveMetadataToAnnotation: boolean;
   collapseLongValues: boolean;
   favoritesFirst: boolean;
   showFullFieldPaths: boolean;
@@ -11,10 +12,11 @@ export interface ExifDisplaySettings {
 export type ExifDisplaySettingKey = keyof ExifDisplaySettings;
 
 const STORAGE_KEY = "exif-display-settings";
-const STORAGE_VERSION = 1;
+const STORAGE_VERSION = 2;
 
 export const defaultExifDisplaySettings: ExifDisplaySettings = {
   autoFormatJson: true,
+  autoSaveMetadataToAnnotation: false,
   collapseLongValues: true,
   favoritesFirst: true,
   showFullFieldPaths: false,

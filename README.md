@@ -33,6 +33,7 @@ Preferences are saved locally.
 | Show favorites first | On | Display favorited fields before other visible fields. |
 | Show full paths for nested fields | Off | Display technical paths such as `parameters.seed`. |
 | Include field name when copying | Off | Copy `Model: XYZ` instead of only `XYZ`. |
+| Auto-save to annotation | Off | Preserve existing annotation text and update only the managed EXIF block. Identical metadata is not saved again. |
 
 <details>
 <summary>Also supports images from:</summary>

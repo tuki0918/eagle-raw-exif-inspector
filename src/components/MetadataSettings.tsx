@@ -20,6 +20,10 @@ const settingItems: Array<{
     key: "includeFieldNameInCopy",
     labelKey: "message.includeFieldNameInCopy",
   },
+  {
+    key: "autoSaveMetadataToAnnotation",
+    labelKey: "message.autoSaveMetadataToAnnotation",
+  },
 ];
 
 const MetadataSettings = ({ settings, onChange }: MetadataSettingsProps) => (

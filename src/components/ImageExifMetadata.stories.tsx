@@ -60,9 +60,10 @@ const withReadmeDemoState: Decorator = (Story) => {
   localStorage.setItem(
     "exif-display-settings",
     JSON.stringify({
-      version: 1,
+      version: 2,
       settings: {
         autoFormatJson: true,
+        autoSaveMetadataToAnnotation: false,
         collapseLongValues: true,
         favoritesFirst: true,
         showFullFieldPaths: false,

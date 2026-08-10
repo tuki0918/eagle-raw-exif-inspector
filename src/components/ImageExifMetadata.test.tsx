@@ -1,4 +1,5 @@
 import ImageExifMetadata from "@/components/ImageExifMetadata";
+import { createExifAnnotationBlock } from "@/utils/exifAnnotation";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 // Mock localStorage
@@ -169,6 +170,9 @@ describe("ImageExifMetadata", () => {
     const includeNameSwitch = screen.getByRole("switch", {
       name: "message.includeFieldNameInCopy",
     });
+    const autoSaveAnnotationSwitch = screen.getByRole("switch", {
+      name: "message.autoSaveMetadataToAnnotation",
+    });
 
     expect(
       screen.getByRole("switch", { name: "message.autoFormatJson" }),
@@ -183,11 +187,47 @@ describe("ImageExifMetadata", () => {
       screen.getByRole("switch", { name: "message.showFullFieldPaths" }),
     ).toHaveAttribute("aria-checked", "false");
     expect(includeNameSwitch).toHaveAttribute("aria-checked", "false");
+    expect(autoSaveAnnotationSwitch).toHaveAttribute("aria-checked", "false");
     fireEvent.click(includeNameSwitch);
     expect(includeNameSwitch).toHaveAttribute("aria-checked", "true");
     expect(localStorageMock.setItem).toHaveBeenCalledWith(
       "exif-display-settings",
       expect.stringContaining('"includeFieldNameInCopy":true'),
+    );
+  });
+
+  it("syncs the current metadata after annotation auto-save is enabled", async () => {
+    const metadata = { Model: "XYZ", ISO: 200 };
+    const eagleItem = {
+      id: "item-1",
+      fileURL: "file:///image.png",
+      annotation: "Manual note",
+      save: vi.fn().mockResolvedValue(true),
+    };
+    const getById = vi.fn().mockResolvedValue(eagleItem);
+    vi.stubGlobal("eagle", { item: { getById } });
+
+    render(<ImageExifMetadata item={metadata} itemId={eagleItem.id} />);
+
+    expect(getById).not.toHaveBeenCalled();
+
+    fireEvent.click(
+      screen.getByRole("tab", { name: "message.displaySettings" }),
+    );
+    fireEvent.click(
+      screen.getByRole("switch", {
+        name: "message.autoSaveMetadataToAnnotation",
+      }),
+    );
+
+    await waitFor(() => expect(eagleItem.save).toHaveBeenCalledTimes(1));
+    expect(getById).toHaveBeenCalledWith(eagleItem.id);
+    expect(localStorageMock.setItem).toHaveBeenCalledWith(
+      "exif-display-settings",
+      expect.stringContaining('"autoSaveMetadataToAnnotation":true'),
+    );
+    expect(eagleItem.annotation).toBe(
+      `Manual note\n${createExifAnnotationBlock(metadata)}`,
     );
   });
 

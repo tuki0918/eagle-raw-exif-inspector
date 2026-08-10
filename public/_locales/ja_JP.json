@@ -29,6 +29,7 @@
     "favoritesFirst": "お気に入りを先頭に表示",
     "showFullFieldPaths": "ネスト項目をフルパス表示",
     "includeFieldNameInCopy": "コピー時に項目名も含める",
+    "autoSaveMetadataToAnnotation": "注釈へ自動保存",
     "copyFieldValue": "項目の値をコピー",
     "showMore": "もっと見る",
     "showLess": "折りたたむ"

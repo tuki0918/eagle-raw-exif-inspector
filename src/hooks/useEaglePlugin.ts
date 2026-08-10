@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 
 export function useEaglePlugin() {
   const [theme, setTheme] = useState<EagleTheme>("LIGHT");
-  const [item, setItem] = useState<{ [key: string]: unknown } | null>(null);
+  const [selection, setSelection] = useState<{
+    itemId: string;
+    metadata: Record<string, unknown>;
+  } | null>(null);
 
   useEffect(() => {
     const handleThemeChange = (theme: unknown) => {
@@ -21,21 +24,21 @@ export function useEaglePlugin() {
       try {
         const items = await eagle.item.getSelected();
         if (items.length !== 1) {
-          setItem(null);
+          setSelection(null);
           return;
         }
 
-        const item = items[0] as { fileURL: string };
+        const item = items[0];
         if (!item.fileURL) {
-          setItem(null);
+          setSelection(null);
           return;
         }
 
         const data = await parseMetadata(item.fileURL);
-        setItem(data ?? null);
+        setSelection(data ? { itemId: item.id, metadata: data } : null);
       } catch (e) {
         console.log("Failed to extract metadata:", e);
-        setItem(null);
+        setSelection(null);
       }
     };
 
@@ -47,5 +50,9 @@ export function useEaglePlugin() {
     eagle.onThemeChanged(handleThemeChange);
   }, []);
 
-  return { theme, item };
+  return {
+    theme,
+    item: selection?.metadata ?? null,
+    itemId: selection?.itemId ?? null,
+  };
 }

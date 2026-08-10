@@ -30,6 +30,7 @@ const englishMessages: Record<string, string> = {
   favoritesFirst: "Show favorites first",
   showFullFieldPaths: "Show full paths for nested fields",
   includeFieldNameInCopy: "Include field name when copying",
+  autoSaveMetadataToAnnotation: "Auto-save to annotation",
   copyFieldValue: "Copy field value",
   showMore: "Show more",
   showLess: "Show less",

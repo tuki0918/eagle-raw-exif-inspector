@@ -1,3 +1,10 @@
+interface EagleItem {
+  readonly id: string;
+  readonly fileURL: string;
+  annotation: string;
+  save: () => Promise<boolean>;
+}
+
 declare const eagle: {
   onPluginCreate: (callback: (plugin: unknown) => void) => void;
   onThemeChanged: (callback: (theme: string) => void) => void;
@@ -6,7 +13,8 @@ declare const eagle: {
     isDarkColors: () => boolean;
   };
   item: {
-    getSelected: () => Promise<unknown[]>;
+    getById: (itemId: string) => Promise<EagleItem | null>;
+    getSelected: () => Promise<EagleItem[]>;
   };
 };
 

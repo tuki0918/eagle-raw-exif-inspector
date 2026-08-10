@@ -1,3 +1,4 @@
+import { useExifAnnotationSync } from "@/hooks/useExifAnnotationSync";
 import {
   type ExifDisplaySettingKey,
   type ExifDisplaySettings,
@@ -18,6 +19,7 @@ import MetadataSettings from "./MetadataSettings";
 
 interface ImageExifMetadataProps {
   item: Record<string, unknown> | null;
+  itemId?: string | null;
   parentFieldName?: string;
 }
 
@@ -196,11 +198,18 @@ const MetadataLevel = ({
 
 const ImageExifMetadata = ({
   item,
+  itemId = null,
   parentFieldName = "",
 }: ImageExifMetadataProps) => {
   const fieldPreferences = useExifFieldPreferences();
   const { settings, updateSetting } = useExifDisplaySettings();
   const formatter = useJsonFormatter(settings.autoFormatJson);
+
+  useExifAnnotationSync({
+    enabled: settings.autoSaveMetadataToAnnotation,
+    itemId,
+    metadata: item,
+  });
 
   if (item == null) {
     return (
